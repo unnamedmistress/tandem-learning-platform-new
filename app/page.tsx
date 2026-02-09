@@ -34,7 +34,7 @@ const ensureStructure = () => {}; // Placeholder to ensure structure is maintain
     {/* Background settings set accurately */}
  {/* Ensure correct JSX syntax throughout */}
       {/* Animated Background Grid */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none flex items-center justify-center" {...{ backgroundImage: 'url(/path-to-hero-image.jpg)', backgroundSize: 'cover' }}>
+      <div className="absolute inset-0 opacity-30 pointer-events-none flex items-center justify-center" style={{ backgroundImage: 'url(/path-to-hero-image.jpg)', backgroundSize: 'cover' }}>
         <div 
           className="absolute inset-0"
           style={{
