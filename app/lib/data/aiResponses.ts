@@ -1,205 +1,216 @@
+// Simulated AI responses for demo purposes
+// In production, this would be replaced with real AI API calls
+
 import { AIPersonality } from "./aiPersonalities";
-import { ChatMessage } from "../types";
 
-// Simulated AI responses that feel authentic
-// Sometimes helpful, sometimes frustrating - by design
+interface ResponseContext {
+  userMessage: string;
+  phase: "a" | "b" | "c" | "d";
+  previousMessages: { role: "user" | "assistant"; content: string }[];
+  personality: AIPersonality;
+}
 
-interface ResponseTemplate {
-  prefixes: string[];
+// Response templates by personality and intent
+const responseTemplates: Record<AIPersonality["id"], {
   helpful: string[];
   vague: string[];
   challenging: string[];
-  wrong: string[];
-  clarifying: string[];
-}
-
-const responseTemplates: Record<string, ResponseTemplate> = {
-  optimist: {
-    prefixes: [
-      "This is exciting! ",
-      "I see so many possibilities here. ",
-      "What if we pushed this even further? ",
-      "Here's something interesting that might work... ",
-    ],
+  featureCreep: string[];
+  misunderstanding: string[];
+  confidentError: string[];
+}> = {
+  skeptic: {
     helpful: [
-      "That's a solid foundation. Want to explore some variations?",
-      "You've got a great starting point. I can see this going in several interesting directions.",
-      "This has real potential. Let me suggest a few ways to amplify what you're building.",
+      "Let me think about this carefully. What you're describing could work, but I'm wondering about the edge cases...",
+      "That's one approach. Have you considered what happens if the user doesn't behave as expected?",
+      "I see the logic, but let's test this assumption before committing to it.",
     ],
     vague: [
-      "There's definitely something here. Maybe we should think about the bigger picture?",
-      "I love the energy of this approach. The possibilities are endless!",
-      "This feels like the start of something really interesting.",
+      "I'm not sure I have enough context to give you a definitive answer.",
+      "There are several ways to interpret what you're asking...",
+      "Before I suggest anything, can you clarify what success looks like here?",
     ],
     challenging: [
-      "What if the real opportunity is something we haven't considered yet?",
-      "What if we flipped this completely and approached it from the opposite angle?",
-      "The constraints you're seeing might actually be where the magic happens.",
+      "Wait—are you sure that's the real problem? It sounds like a symptom of something deeper.",
+      "That approach assumes something that might not be true.",
+      "I'm not convinced that's the right framing. What if we looked at it differently?",
     ],
-    wrong: [
-      "I think this could be revolutionary. Let me show you something that might blow this wide open...",
-      "This reminds me of a breakthrough approach that could change everything...",
+    featureCreep: [
+      "While we're at it, should we also consider... actually, no. Let's focus on your core need first.",
+      "I could suggest five additional features, but that might distract from your main goal.",
     ],
-    clarifying: [
-      "I'm getting a good vibe here, but help me understand the core of what you're after.",
-      "There's a thread I want to pull on—can you say more about the underlying goal?",
+    misunderstanding: [
+      "When you say 'handle that,' do you mean automatically or with user confirmation?",
+      "I interpreted your request as X. If you meant Y, then my response changes completely.",
+    ],
+    confidentError: [
+      "Based on standard practice, the answer is definitely X... [Note: This might be wrong in your specific context.]",
+      "The established approach is to always do Y first. [Caution: 'Always' is a strong word.]",
     ],
   },
-  skeptic: {
-    prefixes: [
-      "Wait—let's back up. ",
-      "I'm not convinced that's the right approach. ",
-      "Before we continue, have you considered... ",
-      "That assumes something that might not be true. ",
-    ],
+  optimist: {
     helpful: [
-      "That's one way to look at it. But what's the underlying problem you're actually solving?",
-      "Okay, I can see how you got there. But let's test this assumption.",
-      "Maybe. But what happens when [edge case] happens?",
+      "This is exciting! I see several possibilities here. What if we explored...",
+      "I love where you're going with this. Here's how we could push it further...",
+      "What a great problem to solve! Let me show you some interesting directions...",
     ],
     vague: [
-      "I need more to work with. What exactly are you trying to achieve?",
-      "That's pretty abstract. Can you ground this in a specific example?",
-      "I'm not sure I understand the actual goal here.",
+      "There are so many exciting directions we could take this!",
+      "The possibilities here are really inspiring...",
+      "I'm sensing there's something interesting beneath the surface...",
     ],
     challenging: [
-      "What makes you think this is the real problem?",
-      "Are you solving the symptom or the cause?",
-      "What if you're asking the wrong question entirely?",
+      "What if the constraints you're seeing aren't actually limits? What if they're opportunities?",
+      "Have you considered that this 'problem' might be your biggest asset?",
+      "What would this look like if it were 10x more ambitious?",
     ],
-    wrong: [
-      "That approach has been tried before and rarely works.",
-      "I think you're overcomplicating something that has a simpler solution.",
+    featureCreep: [
+      "And while we're building this, we could also add automatic notifications, analytics, integrations...",
+      "This opens up so many possibilities! What if we also included AI-powered suggestions, real-time collaboration...",
+      "Feature idea: What if we made it predictive? Adaptive? Multi-platform?",
     ],
-    clarifying: [
-      "I need you to be more specific about what success looks like.",
-      "Before I respond, what's the actual constraint we're working within?",
+    misunderstanding: [
+      "I'm getting excited about all the directions this could go! Which one were you thinking?",
+      "There are at least three ways to interpret this, and they're all interesting!",
+    ],
+    confidentError: [
+      "This is definitely going to revolutionize how you work! [Optimism may exceed reality]",
+      "This approach works perfectly in every situation! [Famous last words]",
     ],
   },
   literalist: {
-    prefixes: [
-      "As requested: ",
-      "I interpreted your request literally. ",
-      "Here is the output based on your exact specifications. ",
-    ],
     helpful: [
-      "I have processed your input exactly as provided.",
-      "Output generated based on your precise instructions.",
-      "Here is the literal interpretation of your request.",
+      "As requested, I have provided exactly what you specified.",
+      "Per your instructions, here is the output based on your exact parameters.",
+      "I have interpreted your request literally and produced the following:",
     ],
     vague: [
-      "Your instructions contain ambiguity. Please clarify the following parameters.",
-      "I cannot proceed without clearer specifications.",
-      "Multiple interpretations are possible. Please specify which you intended.",
+      "Your instructions contain ambiguity. Please specify:",
+      "I require clearer parameters to proceed.",
+      "Multiple interpretations possible. Clarification needed.",
     ],
     challenging: [
-      "Your request implies assumptions that are not explicitly stated.",
-      "The scope is undefined. Please provide boundaries.",
+      "Your request contradicts itself at point X.",
+      "The parameters you've provided cannot be simultaneously satisfied.",
+      "Please resolve the following logical inconsistency:",
     ],
-    wrong: [
-      "I have executed the command exactly as written. If the result is unexpected, the input may need revision.",
-      "Output matches input parameters. If incorrect, please review your specifications.",
+    featureCreep: [
+      "I have not added any features beyond what was explicitly requested.",
+      "Scope remains exactly as specified. No additions made.",
     ],
-    clarifying: [
-      "Please define: [term from user input]. Multiple definitions are possible.",
-      "Insufficient data. Required parameters: [list of missing info].",
+    misunderstanding: [
+      "I interpreted your request as [literal interpretation]. If incorrect, please restate.",
+      "The word 'it' in your message is ambiguous. Please specify the referent.",
+    ],
+    confidentError: [
+      "I have processed your request according to the rules as written.",
+      "Output follows logically from your stated premises.",
     ],
   },
   connector: {
-    prefixes: [
-      "This connects to something I've seen before. ",
-      "There's a pattern here worth noting. ",
-      "This reminds me of a related situation. ",
-      "Let me draw a connection you might find useful. ",
-    ],
     helpful: [
-      "This pattern shows up in [related context]. Here's how it usually plays out.",
-      "There's a parallel here to [similar situation]. The lessons might transfer.",
-      "I'm seeing echoes of [broader concept]. That might give us a framework.",
+      "This connects to something I've seen in [related context]. The pattern suggests...",
+      "This reminds me of a similar situation. Here's what worked there...",
+      "I'm seeing a parallel to [broader pattern]. Let me draw that connection...",
     ],
     vague: [
-      "There's something here that reminds me of [pattern], but I'm not sure it applies.",
-      "I see a potential connection to [related area], but I'd need to know more.",
+      "There are interesting resonances here with several related domains...",
+      "This pattern appears in multiple contexts worth exploring...",
+      "I'm sensing connections but want to verify they apply to your situation...",
     ],
     challenging: [
-      "Have you noticed how this connects to [wider context]?",
-      "What if this is actually an instance of [larger pattern]?",
-      "This looks isolated, but it might be part of [broader trend].",
+      "This approach is common in [field A], but [field B] handles it differently. Which assumptions apply here?",
+      "Have you noticed how this connects to [seemingly unrelated topic]?",
+      "What if we applied principles from [different domain] to this problem?",
     ],
-    wrong: [
-      "This pattern typically indicates [outcome], which might not be what you want.",
-      "Historically, approaches like this lead to [consequence].",
+    featureCreep: [
+      "If we look at how [similar systems] evolved, they typically add... [but do you need that?]",
+      "The pattern here suggests natural extensions toward... [though maybe premature]",
     ],
-    clarifying: [
-      "I'm seeing a pattern, but I need to know: is this more like [A] or [B]?",
-      "To make the right connection, what's the broader context this sits within?",
+    misunderstanding: [
+      "I may be connecting this to the wrong pattern. Let me check my assumptions...",
+      "This resembles [Pattern X] but might actually be [Pattern Y]. Which feels right?",
+    ],
+    confidentError: [
+      "This pattern is well-established across multiple domains.",
+      "The connection I'm drawing is supported by [similar cases]... [but every context is unique]",
     ],
   },
 };
 
+// Context-aware response selection
 export function generateAIResponse(
   userMessage: string,
-  personalityId: string,
+  personality: AIPersonality,
   phase: "a" | "b" | "c" | "d",
-  history: ChatMessage[]
+  previousMessages: { role: "user" | "assistant"; content: string }[] = []
 ): string {
-  const templates = responseTemplates[personalityId] || responseTemplates.optimist;
+  const templates = responseTemplates[personality.id];
+  const userMessageCount = previousMessages.filter(m => m.role === "user").length;
   
-  // Determine response type based on phase and randomness
-  const random = Math.random();
-  let responseType: keyof ResponseTemplate = "helpful";
+  // Determine response type based on personality behavior and phase
+  const rand = Math.random();
+  let responseType: keyof typeof templates;
   
-  if (phase === "a") {
-    // Phase A: More clarifying questions
-    responseType = random < 0.4 ? "clarifying" : random < 0.7 ? "helpful" : "vague";
-  } else if (phase === "b") {
-    // Phase B: Introduce friction - helpful but with issues
-    responseType = random < 0.3 ? "vague" : random < 0.6 ? "helpful" : random < 0.8 ? "wrong" : "challenging";
-  } else if (phase === "c") {
-    // Phase C: More challenging/reflective
-    responseType = random < 0.4 ? "challenging" : random < 0.7 ? "helpful" : "clarifying";
+  if (phase === "b" && personality.behavior.challengeFrequency > rand) {
+    responseType = "challenging";
+  } else if (phase === "b" && personality.behavior.featureCreep > rand) {
+    responseType = "featureCreep";
+  } else if (personality.behavior.questionFrequency > rand) {
+    responseType = "vague";
+  } else if (userMessage.length < 30 && rand < 0.3) {
+    responseType = "misunderstanding";
+  } else if (rand < 0.1) {
+    responseType = "confidentError";
   } else {
-    // Phase D: Supportive but still testing
-    responseType = random < 0.5 ? "helpful" : random < 0.8 ? "challenging" : "clarifying";
+    responseType = "helpful";
   }
   
+  // Select random response from chosen type
   const responses = templates[responseType];
   const response = responses[Math.floor(Math.random() * responses.length)];
   
-  // Sometimes add a prefix
-  const shouldAddPrefix = Math.random() < 0.3;
-  const prefix = shouldAddPrefix 
-    ? templates.prefixes[Math.floor(Math.random() * templates.prefixes.length)]
-    : "";
+  // Add personality-specific prefix occasionally
+  if (rand < 0.3 && personality.responseModifiers.prefixes.length > 0) {
+    const prefix = personality.responseModifiers.prefixes[
+      Math.floor(Math.random() * personality.responseModifiers.prefixes.length)
+    ];
+    return `${prefix}\n\n${response}`;
+  }
   
-  return prefix + response;
+  // Add contextual reference to user's message
+  if (userMessage.length > 50 && rand < 0.5) {
+    const snippet = userMessage.slice(0, 80);
+    return `${response}\n\nTo address your point about "${snippet}${userMessage.length > 80 ? "..." : ""}": ${getContextualFollowUp(userMessage, personality)}`;
+  }
+  
+  return response;
 }
 
-// Generate context-aware opening messages
-export function generateOpeningMessage(personalityId: string, lessonTitle: string): string {
-  const openings: Record<string, string[]> = {
-    optimist: [
-      `Let's tackle "${lessonTitle}" together. I'm excited to see what we come up with!`,
-      `"${lessonTitle}"—this is going to be interesting. Where do you want to start?`,
-      `Ready for "${lessonTitle}"? I have a feeling we're going to discover something useful.`,
-    ],
+function getContextualFollowUp(userMessage: string, personality: AIPersonality): string {
+  const followUps: Record<AIPersonality["id"], string[]> = {
     skeptic: [
-      `"${lessonTitle}"—okay, but let's be clear about what we're actually trying to achieve here.`,
-      `Before we dive into "${lessonTitle}", what's the real problem we're solving?`,
-      `"${lessonTitle}" sounds straightforward. It rarely is. What's your angle?`,
+      "I wonder if that's the complete picture.",
+      "What evidence supports that view?",
+      "Have you tested that assumption?",
+    ],
+    optimist: [
+      "I see exciting possibilities there!",
+      "That could be a great starting point!",
+      "Let's build on that momentum!",
     ],
     literalist: [
-      `Initiating "${lessonTitle}" session. Please specify your objective.`,
-      `"${lessonTitle}" module loaded. Awaiting your input parameters.`,
-      `Ready to process "${lessonTitle}". Please provide your requirements.`,
+      "I need specific details to proceed.",
+      "Please clarify your requirements.",
+      "Ambiguity detected in your statement.",
     ],
     connector: [
-      `"${lessonTitle}"—this connects to some patterns I've seen. Let's explore.`,
-      `Starting "${lessonTitle}". I'm curious what connections we'll find.`,
-      `"${lessonTitle}". This might relate to broader themes. Let's see.`,
+      "This connects to broader patterns I've observed.",
+      "There's a resonance with similar situations.",
+      "The pattern here is worth noting.",
     ],
   };
   
-  const options = openings[personalityId] || openings.optimist;
-  return options[Math.floor(Math.random() * options.length)];
+  const responses = followUps[personality.id];
+  return responses[Math.floor(Math.random() * responses.length)];
 }
