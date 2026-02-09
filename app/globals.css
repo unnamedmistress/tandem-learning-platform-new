@@ -48,6 +48,7 @@
     background: var(--void-black);
     color: hsl(var(--foreground));
     font-family: 'Inter', sans-serif;
+    min-height: 100vh;
   }
   
   /* Selection */

@@ -35,8 +35,8 @@ export default function RootLayout({
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <UserProvider>
           <Navigation />
-          <main className="pb-16 min-h-screen">
-            <div className="mx-auto w-full max-w-[1920px]">
+          <main className="pb-16 min-h-screen flex justify-center">
+            <div className="w-full max-w-[1920px] px-4 sm:px-6 lg:px-8">
               {children}
             </div>
           </main>
