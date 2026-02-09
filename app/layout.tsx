@@ -36,10 +36,6 @@ export default function RootLayout({
         <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta httpEquiv="Pragma" content="no-cache" />
         <meta httpEquiv="Expires" content="0" />
-        <style>{`
-          main { text-align: center !important; }
-          main > div { text-align: center !important; }
-        `}</style>
       </head>
       <body 
         className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}
@@ -50,13 +46,14 @@ export default function RootLayout({
         }}
       >
         <UserProvider>
-          <nav className="flex justify-between items-center py-4 px-8 bg-gradient-to-r from-cyan-500 to-pink-500 text-white fixed w-full top-0 shadow-md"></nav>
+          <Navigation />
           <main 
             style={{
               width: '100%',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              paddingTop: '80px', // Add padding for fixed navigation
             }}
           >
             <div 

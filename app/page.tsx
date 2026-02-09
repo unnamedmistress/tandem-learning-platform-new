@@ -9,9 +9,8 @@ import { AIPersonalityShowcase } from './components/AIPersonalityShowcase';
 // Note: These imports work because page.tsx is in app/ directory
 
 export default function Home() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 }); // Ensure state updates correctly
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showPersonalityShowcase, setShowPersonalityShowcase] = useState(false);
-const ensureStructure = () => {}; // Placeholder to ensure structure is maintained
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -22,17 +21,7 @@ const ensureStructure = () => {}; // Placeholder to ensure structure is maintain
   }, []);
   
   return (
-    <header className="flex items-center justify-center h-screen bg-gradient-to-b from-purple-900 via-black to-black">
-  <div className="text-center px-4">
-    {/* Confirm Div Structure */}
-    <h1 className="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-600">TANDEM</h1>
-    <p className="mt-4 text-xl md:text-2xl text-gray-300">The Collaboration Dojo</p>
-    <button className="mt-6 px-8 py-4 rounded-full bg-cyan-500 text-white font-bold uppercase tracking-wide hover:scale-105 transition-transform">Enter the Dojo</button>
-  </div>
-</header>
-<div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black w-full">
-    {/* Background settings set accurately */}
- {/* Ensure correct JSX syntax throughout */}
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black w-full">
       {/* Animated Background Grid */}
       <div className="absolute inset-0 opacity-30 pointer-events-none flex items-center justify-center" style={{ backgroundImage: 'url(/path-to-hero-image.jpg)', backgroundSize: 'cover' }}>
         <div 
