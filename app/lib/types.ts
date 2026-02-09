@@ -90,6 +90,7 @@ export interface Class {
   description: string;
   problemStatement: string;
   mindset: string;
+  icon?: string;
   colorScheme: {
     primary: string;
     secondary: string;

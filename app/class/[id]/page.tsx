@@ -125,7 +125,7 @@ export default function ClassPage() {
                 border: `2px solid ${colors.primary}40`,
               }}
             >
-              <span className="text-2xl">{classData.icon}</span>
+              <span className="text-2xl">{classData.icon || '🎯'}</span>
             </div>
             <span 
               className="px-3 py-1 rounded-full text-xs font-medium"

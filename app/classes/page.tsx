@@ -80,7 +80,7 @@ function ClassCard({
               border: `2px solid ${colors.primary}40`,
             }}
           >
-            <span className="text-2xl">{classData.icon}</span>
+            <span className="text-2xl">{classData.icon || '🎯'}</span>
           </div>
           
           {/* Title */}
