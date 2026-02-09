@@ -46,9 +46,10 @@ const goals: GoalOption[] = [
 interface GoalSetterProps {
   onComplete: (goalId: string, goalTitle: string) => void;
   onSkip?: () => void;
+  onBack?: () => void;
 }
 
-export function GoalSetter({ onComplete, onSkip }: GoalSetterProps) {
+export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
