@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { classes } from "../lib/data/classes";
-import { Brain, Sparkles, ArrowRight, Search, CheckCircle, Play } from 'lucide-react';
+import { Sparkles, Search, ArrowRight, Play, CheckCircle } from 'lucide-react';
 import { useUser } from "../lib/hooks/useUser";
 import { PathSelector } from "../components/PathSelector";
 import { LessonPreviewModal } from "../components/LessonPreviewModal";
@@ -42,7 +42,7 @@ const colorMap: Record<string, { primary: string; secondary: string; glow: strin
   },
 };
 
-function CelestialOrb({ 
+function ClassCard({ 
   classData, 
   index,
   completedCount,
@@ -53,195 +53,95 @@ function CelestialOrb({
   completedCount: number;
   totalCount: number;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
   const colors = colorMap[classData.colorScheme.primary] || colorMap.slate;
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
   const isComplete = progress === 100;
   
-  // Staggered layout offset - simplified for responsive
-  const offsetY = 0; // Removed stagger for cleaner mobile layout
-  
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0, y: 100 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ 
-        delay: index * 0.15,
-        duration: 0.8,
-        type: 'spring',
-        bounce: 0.3
-      }}
-      className="relative"
-      style={{ marginTop: offsetY }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      whileHover={{ y: -5 }}
     >
       <Link href={`/class/${classData.id}`}>
-        <div className="relative cursor-pointer group">
-          {/* Outer orbit ring */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
+        <div 
+          className="relative p-6 rounded-2xl border cursor-pointer transition-all h-full flex flex-col"
+          style={{
+            background: `linear-gradient(135deg, ${colors.primary}08, ${colors.secondary}05)`,
+            borderColor: `${colors.primary}30`,
+          }}
+        >
+          {/* Icon/Theme Badge */}
+          <div 
+            className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
             style={{
-              border: `1px dashed ${colors.primary}`,
-              opacity: 0.3,
+              background: `${colors.primary}20`,
+              border: `2px solid ${colors.primary}40`,
             }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20 + index * 5, repeat: Infinity, ease: 'linear' }}
-          />
-          
-          {/* Secondary orbit ring */}
-          <motion.div
-            className="absolute inset-4 rounded-full"
-            style={{
-              border: `1px dotted ${colors.secondary}`,
-              opacity: 0.2,
-            }}
-            animate={{ rotate: -360 }}
-            transition={{ duration: 15 + index * 3, repeat: Infinity, ease: 'linear' }}
-          />
-          
-          {/* Main planet body - Larger on mobile for touch targets */}
-          <motion.div
-            className="relative w-32 h-32 sm:w-40 sm:w-48 mx-auto rounded-full overflow-hidden touch-manipulation"
-            style={{
-              background: `radial-gradient(circle at 30% 30%, ${colors.secondary}40, ${colors.primary}20, transparent)`,
-              boxShadow: isHovered 
-                ? `0 0 60px ${colors.glow}, inset 0 0 40px ${colors.primary}30`
-                : `0 0 30px ${colors.glow}, inset 0 0 20px ${colors.primary}20`,
-              border: `2px solid ${colors.primary}50`,
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 300 }}
           >
-            {/* Planet surface texture */}
-            <div 
-              className="absolute inset-0 opacity-30"
-              style={{
-                backgroundImage: `
-                  radial-gradient(circle at 20% 80%, ${colors.primary}40 0%, transparent 50%),
-                  radial-gradient(circle at 80% 20%, ${colors.secondary}30 0%, transparent 40%),
-                  radial-gradient(circle at 50% 50%, transparent 30%, ${colors.primary}20 100%)
-                `,
-              }}
-            />
-            
-            {/* Progress ring */}
-            {progress > 0 && (
-              <svg 
-                className="absolute inset-0 w-full h-full -rotate-90"
-                viewBox="0 0 100 100"
-              >
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="46"
-                  fill="none"
-                  stroke="rgba(255,255,255,0.1)"
-                  strokeWidth="2"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="46"
-                  fill="none"
-                  stroke={isComplete ? '#39FF14' : colors.primary}
-                  strokeWidth="2"
-                  strokeDasharray={`${2 * Math.PI * 46}`}
-                  strokeDashoffset={`${2 * Math.PI * 46 * (1 - progress / 100)}`}
-                  strokeLinecap="round"
-                  style={{
-                    filter: isComplete ? 'drop-shadow(0 0 4px #39FF14)' : `drop-shadow(0 0 4px ${colors.glow})`,
-                    transition: 'stroke-dashoffset 0.5s ease-out',
-                  }}
-                />
-              </svg>
-            )}
-            
-            {/* Content overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                className="mb-2"
-              >
-                {isComplete ? (
-                  <CheckCircle 
-                    className="w-8 h-8"
-                    style={{ color: '#39FF14', filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))' }}
-                  />
-                ) : (
-                  <Brain 
-                    className="w-8 h-8"
-                    style={{ color: colors.primary, filter: `drop-shadow(0 0 10px ${colors.glow})` }}
-                  />
-                )}
-              </motion.div>
-              
-              <h3 
-                className="text-sm font-bold uppercase tracking-wider mb-1"
-                style={{ color: colors.primary }}
-              >
-                {classData.theme}
-              </h3>
-              
-              <p className="text-xs text-gray-400 line-clamp-2">
-                {classData.title}
-              </p>
-              
-              {/* Hover indicator */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
-                className="mt-2 flex items-center gap-1 text-xs"
-                style={{ color: colors.secondary }}
-              >
-                Enter <ArrowRight className="w-3 h-3" />
-              </motion.div>
-            </div>
-          </motion.div>
+            <span className="text-2xl">{classData.icon}</span>
+          </div>
           
-          {/* Orbiting particles */}
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 rounded-full"
-              style={{
-                background: colors.primary,
-                boxShadow: `0 0 10px ${colors.glow}`,
-                top: '50%',
-                left: '50%',
-              }}
-              animate={{
-                x: [0, Math.cos(i * 2.1) * 120, 0],
-                y: [0, Math.sin(i * 2.1) * 120, 0],
-              }}
-              transition={{
-                duration: 8 + i * 2,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-            />
-          ))}
+          {/* Title */}
+          <h3 
+            className="text-xl font-bold mb-2"
+            style={{ color: colors.primary }}
+          >
+            {classData.title}
+          </h3>
+          
+          {/* Theme */}
+          <p className="text-sm text-gray-400 mb-3">
+            {classData.theme}
+          </p>
+          
+          {/* Description */}
+          <p className="text-sm text-gray-500 mb-4 flex-grow">
+            {classData.description}
+          </p>
+          
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs text-gray-400">
+                {completedCount}/{totalCount} lessons
+              </span>
+              <span className="text-xs font-medium" style={{ color: colors.primary }}>
+                {Math.round(progress)}%
+              </span>
+            </div>
+            <div 
+              className="w-full h-2 rounded-full overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.05)' }}
+            >
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: colors.primary }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
+              />
+            </div>
+          </div>
+          
+          {/* CTA Button */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {isComplete && (
+                <CheckCircle className="w-4 h-4" style={{ color: '#39FF14' }} />
+              )}
+              <span 
+                className="text-sm font-medium"
+                style={{ color: isComplete ? '#39FF14' : colors.primary }}
+              >
+                {isComplete ? 'Complete' : 'Start Learning'}
+              </span>
+            </div>
+            <ArrowRight className="w-5 h-5" style={{ color: colors.primary }} />
+          </div>
         </div>
       </Link>
-      
-      {/* Label below */}
-      <motion.div 
-        className="text-center mt-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 + index * 0.1 }}
-      >
-        <p className="text-sm text-gray-400 font-medium">{classData.title}</p>
-        <p className="text-xs mt-1" style={{ color: isComplete ? '#39FF14' : '#6B6B7E' }}>
-          {isComplete 
-            ? 'Complete ✓' 
-            : `${completedCount}/${totalCount} lessons${progress > 0 ? ` (${Math.round(progress)}%)` : ''}`
-          }
-        </p>
-      </motion.div>
     </motion.div>
   );
 }
@@ -274,50 +174,40 @@ export default function ClassesPage() {
   
   return (
     <div className="min-h-screen bg-[#0A0A0F] relative overflow-hidden">
-      {/* Background constellation effect */}
-      <div className="absolute inset-0">
-        {[...Array(50)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-white"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.5,
-            }}
-            animate={{
-              opacity: [0.1, 0.5, 0.1],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 2 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
+      {/* Subtle background effect */}
+      <div className="absolute inset-0 opacity-10">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+          }}
+        />
       </div>
       
-      <div className="relative z-10  py-16">
+      <div className="relative z-10 py-8 px-4 max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-20"
+          className="text-center mb-8"
         >
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Sparkles className="w-6 h-6" style={{ color: '#00F0FF' }} />
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Sparkles className="w-5 h-5" style={{ color: '#00F0FF' }} />
             <span 
-              className="text-sm uppercase tracking-[0.3em] font-mono"
+              className="text-sm uppercase tracking-widest font-mono"
               style={{ color: '#8B8B9E' }}
             >
               Training Halls
             </span>
-            <Sparkles className="w-6 h-6" style={{ color: '#FF006E' }} />
+            <Sparkles className="w-5 h-5" style={{ color: '#FF006E' }} />
           </div>
           
           <h1 
-            className="text-3xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 px-4"
+            className="text-4xl sm:text-5xl font-bold mb-3"
             style={{
               background: 'linear-gradient(135deg, #00F0FF, #B829DD, #FF006E)',
               WebkitBackgroundClip: 'text',
@@ -327,18 +217,16 @@ export default function ClassesPage() {
             Choose Your Path
           </h1>
           
-          <p className="text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-4" style={{ color: '#6B6B7E' }}>
-            Each celestial body represents a different way of working with AI.
-            <br className="hidden sm:block" />
-            <span style={{ color: '#8B8B9E' }}>Tap to explore.</span>
+          <p className="text-base max-w-2xl mx-auto mb-6" style={{ color: '#6B6B7E' }}>
+            Select a class to begin your AI collaboration journey
           </p>
           
           {/* Search */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="max-w-md mx-auto"
+            transition={{ delay: 0.2 }}
+            className="max-w-md mx-auto mb-6"
           >
             <div 
               className="relative flex items-center"
@@ -349,42 +237,41 @@ export default function ClassesPage() {
                 transition: 'border-color 0.2s',
               }}
             >
-              <Search className="w-5 h-5 ml-4" style={{ color: '#6B6B7E' }} />
+              <Search className="absolute left-4 w-4 h-4" style={{ color: '#6B6B7E' }} />
               <input
                 id="class-search"
                 type="text"
+                placeholder="Search classes... (Press / to focus)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
-                placeholder="Search classes... (Press / to focus)"
-                className="w-full bg-transparent text-white placeholder-gray-600 px-4 py-3 focus:outline-none"
+                className="w-full bg-transparent py-3 pl-12 pr-4 text-sm text-white placeholder-gray-500 outline-none"
               />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="mr-4 text-gray-500 hover:text-white"
-                >
-                  ×
-                </button>
-              )}
             </div>
           </motion.div>
         </motion.div>
         
-        {/* Path Selector */}
-        <PathSelector currentPath="classes" />
-        
-        {/* Preview Button */}
+        {/* Path Selector - Compact */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.3 }}
+          className="mb-8"
+        >
+          <PathSelector />
+        </motion.div>
+        
+        {/* Lesson Preview Button */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
           className="text-center mb-8"
         >
           <button
             onClick={() => setShowPreview(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all hover:scale-105"
             style={{
               background: 'rgba(0, 240, 255, 0.1)',
               border: '1px solid rgba(0, 240, 255, 0.3)',
@@ -396,8 +283,8 @@ export default function ClassesPage() {
           </button>
         </motion.div>
         
-        {/* Celestial Grid - 2 columns on mobile, 3 on desktop */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto px-4">
+        {/* Classes Grid - MAIN REDESIGN */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {filteredClasses.length > 0 ? (
             filteredClasses.map((classData, index) => {
               const completedLessons = classData.lessons.filter(lesson => 
@@ -405,7 +292,7 @@ export default function ClassesPage() {
               ).length;
               
               return (
-                <CelestialOrb 
+                <ClassCard 
                   key={classData.id} 
                   classData={classData} 
                   index={index}
@@ -430,15 +317,15 @@ export default function ClassesPage() {
           )}
         </div>
         
-        {/* Footer */}
+        {/* Footer Tip */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="text-center mt-24 max-w-2xl mx-auto"
+          transition={{ delay: 0.8 }}
+          className="text-center max-w-2xl mx-auto"
         >
           <div 
-            className="p-6 rounded-2xl border"
+            className="p-4 rounded-xl border"
             style={{
               background: 'rgba(0, 240, 255, 0.03)',
               borderColor: 'rgba(0, 240, 255, 0.1)',

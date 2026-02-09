@@ -1,44 +1,19 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { NeuralConnector } from './components/NeuralConnector';
 import { HolographicCard } from './components/HolographicCard';
 import { AIPersonalityShowcase } from './components/AIPersonalityShowcase';
-// Note: These imports work because page.tsx is in app/ directory
+import { GraduationCap, Users, Sparkles, Brain } from 'lucide-react';
 
 export default function Home() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showPersonalityShowcase, setShowPersonalityShowcase] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  
-  // Generate particle positions only on client side to avoid hydration mismatch
-  const particles = useMemo(() => {
-    if (!isClient) return [];
-    return [...Array(20)].map((_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      color: i % 2 === 0 ? '#00F0FF' : '#FF006E',
-      duration: 3 + Math.random() * 2,
-      delay: Math.random() * 2,
-    }));
-  }, [isClient]);
-  
-  useEffect(() => {
-    setIsClient(true);
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
   
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black w-full">
-      {/* Animated Background Grid */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none flex items-center justify-center" style={{ backgroundImage: 'url(/path-to-hero-image.jpg)', backgroundSize: 'cover' }}>
+      {/* Simplified Background Grid */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div 
           className="absolute inset-0"
           style={{
@@ -47,91 +22,29 @@ export default function Home() {
               linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px)
             `,
             backgroundSize: '50px 50px',
-            transform: 'perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px)',
-            transformOrigin: 'center top',
           }}
         />
       </div>
       
-      {/* Floating Particles - Only render on client */}
-      {isClient && (
-        <div className="absolute inset-0 pointer-events-none">
-          {particles.map((particle) => (
-            <motion.div
-              key={particle.id}
-              className="absolute w-1 h-1 rounded-full"
-              style={{
-                background: particle.color,
-                left: `${particle.left}%`,
-                top: `${particle.top}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.2, 0.8, 0.2],
-              }}
-              transition={{
-                duration: particle.duration,
-                repeat: Infinity,
-                delay: particle.delay,
-              }}
-            />
-          ))}
-        </div>
-      )}
-      
-      {/* Mouse-following glow */}
-      <div 
-        className="fixed pointer-events-none z-0 w-[600px] h-[600px] rounded-full opacity-20 blur-3xl"
-        style={{
-          background: 'radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, transparent 70%)',
-          left: mousePos.x - 300,
-          top: mousePos.y - 300,
-          transition: 'left 0.3s ease-out, top 0.3s ease-out',
-        }}
-      />
-      
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen w-full text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen w-full px-4 py-12">
         
-        {/* Logo Animation */}
+        {/* Logo - Simplified */}
         <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ duration: 1, type: 'spring', bounce: 0.4 }}
-          className="mb-6 sm:mb-8"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
         >
-          <div className="relative">
-            {/* Outer ring */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{
-                border: '2px solid transparent',
-                background: 'linear-gradient(#0A0A0F, #0A0A0F) padding-box, linear-gradient(135deg, #00F0FF, #FF006E) border-box',
-              }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            />
-            
-            {/* Inner content - Mobile responsive size */}
-            <div 
-              className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-full flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))',
-                boxShadow: '0 0 40px rgba(0, 240, 255, 0.3), inset 0 0 40px rgba(255, 0, 110, 0.1)',
-              }}
-            >
-              <span 
-                className="text-4xl sm:text-5xl font-bold"
-                style={{
-                  background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  textShadow: '0 0 30px rgba(0, 240, 255, 0.5)',
-                }}
-              >
-                T
-              </span>
-            </div>
+          <div 
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(255, 0, 110, 0.2))',
+              border: '2px solid rgba(0, 240, 255, 0.3)',
+              boxShadow: '0 0 30px rgba(0, 240, 255, 0.2)',
+            }}
+          >
+            <Brain className="w-10 h-10 sm:w-12 sm:h-12" style={{ color: '#00F0FF' }} />
           </div>
         </motion.div>
         
@@ -139,8 +52,8 @@ export default function Home() {
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold mb-6 sm:mb-8 text-center bg-gradient-to-r from-cyan-400 to-pink-600 bg-clip-text text-transparent"
+          transition={{ delay: 0.2 }}
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-4 text-center"
         >
           <span className="text-white">TAN</span>
           <span 
@@ -155,8 +68,8 @@ export default function Home() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-lg sm:text-xl md:text-2xl text-center mb-2 sm:mb-4 max-w-2xl px-4"
+          transition={{ delay: 0.3 }}
+          className="text-xl sm:text-2xl text-center mb-2 max-w-2xl"
           style={{ color: '#8B8B9E' }}
         >
           The Collaboration Dojo
@@ -165,119 +78,145 @@ export default function Home() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="text-base sm:text-lg text-center mb-8 sm:mb-12 max-w-xl px-4"
+          transition={{ delay: 0.4 }}
+          className="text-base sm:text-lg text-center mb-10 max-w-xl"
           style={{ color: '#6B6B7E' }}
         >
-          <span className="hidden sm:inline">Practice working with AI through real problems.<br /></span>
-          <span style={{ color: '#00F0FF' }}>Human</span> + 
-          <span style={{ color: '#FF006E' }}> AI</span> = 
-          <span style={{ color: '#B829DD' }}> Fusion</span>
+          Practice working with AI through real problems
         </motion.p>
         
-        {/* Neural Connection Visual - Hidden on mobile */}
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          className="hidden sm:block w-full max-w-md mb-8 sm:mb-12"
-        >
-          <NeuralConnector intensity="high" state="pulsing" />
-        </motion.div>
-        
-        {/* CTA Button */}
+        {/* CTA Button - More Prominent */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mb-16"
         >
           <Link href="/onboarding">
             <motion.button
-              className="relative px-8 sm:px-12 py-4 sm:py-5 rounded-full text-base sm:text-lg font-bold uppercase tracking-widest overflow-hidden group w-full sm:w-auto"
+              className="relative px-10 py-4 rounded-full text-lg font-bold uppercase tracking-wider"
               style={{
                 background: 'linear-gradient(135deg, #00F0FF 0%, #B829DD 50%, #FF006E 100%)',
-                boxShadow: '0 0 40px rgba(0, 240, 255, 0.4)',
+                boxShadow: '0 4px 30px rgba(0, 240, 255, 0.4)',
+                color: 'white',
               }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, boxShadow: '0 6px 40px rgba(0, 240, 255, 0.6)' }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Button glow effect */}
-              <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{
-                  background: 'linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent)',
-                }}
-              />
-              <span className="relative text-white">Enter The Dojo</span>
+              Enter The Dojo
             </motion.button>
           </Link>
-        </motion.div>
+        </motion.p>
         
-        {/* Feature Preview Cards */}
+        {/* Feature Cards - Grid Layout */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-12 sm:mt-20 px-4"
+          transition={{ delay: 0.6 }}
+          className="w-full max-w-4xl"
         >
-          <div 
-            className="p-4 sm:p-6 rounded-xl border text-center flex-1 sm:flex-none sm:max-w-xs"
-            style={{
-              background: 'rgba(0, 240, 255, 0.05)',
-              borderColor: 'rgba(0, 240, 255, 0.2)',
-            }}
-          >
-            <div 
-              className="text-2xl sm:text-3xl mb-1 sm:mb-2"
-              style={{ textShadow: '0 0 20px rgba(0, 240, 255, 0.5)' }}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {/* Practice Classes Card */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="p-8 rounded-2xl border text-center cursor-pointer transition-all"
+              style={{
+                background: 'rgba(0, 240, 255, 0.05)',
+                borderColor: 'rgba(0, 240, 255, 0.2)',
+              }}
             >
-              6
-            </div>
-            <div className="text-xs sm:text-sm text-gray-400">Practice Classes</div>
-          </div>
-          
-          <div 
-            className="p-4 sm:p-6 rounded-xl border text-center flex-1 sm:flex-none sm:max-w-xs cursor-pointer transition-all hover:scale-[1.02]"
-            style={{
-              background: 'rgba(255, 0, 110, 0.05)',
-              borderColor: 'rgba(255, 0, 110, 0.2)',
-            }}
-            onClick={() => setShowPersonalityShowcase(true)}
-          >
-            <div 
-              className="text-2xl sm:text-3xl mb-1 sm:mb-2"
-              style={{ textShadow: '0 0 20px rgba(255, 0, 110, 0.5)' }}
+              <GraduationCap 
+                className="w-12 h-12 mx-auto mb-4" 
+                style={{ color: '#00F0FF' }} 
+              />
+              <div 
+                className="text-4xl font-bold mb-2"
+                style={{ 
+                  color: '#00F0FF',
+                  textShadow: '0 0 20px rgba(0, 240, 255, 0.5)' 
+                }}
+              >
+                6
+              </div>
+              <div className="text-sm font-medium text-gray-300 mb-1">
+                Practice Classes
+              </div>
+              <div className="text-xs text-gray-500">
+                Structured learning paths
+              </div>
+            </motion.div>
+            
+            {/* AI Personalities Card */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              onClick={() => setShowPersonalityShowcase(true)}
+              className="p-8 rounded-2xl border text-center cursor-pointer transition-all"
+              style={{
+                background: 'rgba(255, 0, 110, 0.05)',
+                borderColor: 'rgba(255, 0, 110, 0.2)',
+              }}
             >
-              4
-            </div>
-            <div className="text-xs sm:text-sm text-gray-400">AI Personalities</div>
-          </div>
-          
-          <div 
-            className="p-4 sm:p-6 rounded-xl border text-center flex-1 sm:flex-none sm:max-w-xs"
-            style={{
-              background: 'rgba(184, 41, 221, 0.05)',
-              borderColor: 'rgba(184, 41, 221, 0.2)',
-            }}
-          >
-            <div 
-              className="text-2xl sm:text-3xl mb-1 sm:mb-2"
-              style={{ textShadow: '0 0 20px rgba(184, 41, 221, 0.5)' }}
+              <Users 
+                className="w-12 h-12 mx-auto mb-4" 
+                style={{ color: '#FF006E' }} 
+              />
+              <div 
+                className="text-4xl font-bold mb-2"
+                style={{ 
+                  color: '#FF006E',
+                  textShadow: '0 0 20px rgba(255, 0, 110, 0.5)' 
+                }}
+              >
+                4
+              </div>
+              <div className="text-sm font-medium text-gray-300 mb-1">
+                AI Personalities
+              </div>
+              <div className="text-xs text-gray-500">
+                Different collaboration styles
+              </div>
+            </motion.div>
+            
+            {/* Skill Tokens Card */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -5 }}
+              className="p-8 rounded-2xl border text-center cursor-pointer transition-all"
+              style={{
+                background: 'rgba(184, 41, 221, 0.05)',
+                borderColor: 'rgba(184, 41, 221, 0.2)',
+              }}
             >
-              ∞
-            </div>
-            <div className="text-xs sm:text-sm text-gray-400">Skill Tokens</div>
+              <Sparkles 
+                className="w-12 h-12 mx-auto mb-4" 
+                style={{ color: '#B829DD' }} 
+              />
+              <div 
+                className="text-4xl font-bold mb-2"
+                style={{ 
+                  color: '#B829DD',
+                  textShadow: '0 0 20px rgba(184, 41, 221, 0.5)' 
+                }}
+              >
+                ∞
+              </div>
+              <div className="text-sm font-medium text-gray-300 mb-1">
+                Skill Tokens
+              </div>
+              <div className="text-xs text-gray-500">
+                Track your growth
+              </div>
+            </motion.div>
           </div>
         </motion.div>
         
-        {/* Sample Holographic Card Preview - Hidden on small mobile */}
+        {/* Sample Card Preview */}
         <motion.div
-          initial={{ opacity: 0, rotateY: -90 }}
-          animate={{ opacity: 1, rotateY: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="hidden sm:block mt-16"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="mt-20 hidden sm:block"
         >
-          <p className="text-center text-gray-500 mb-4 text-sm uppercase tracking-widest">
+          <p className="text-center text-gray-500 mb-6 text-sm uppercase tracking-widest">
             Preview Your Future Artifacts
           </p>
           <HolographicCard
