@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { classes } from "../lib/data/classes";
-import { Brain, Sparkles, ArrowRight, Search } from 'lucide-react';
+import { Brain, Sparkles, ArrowRight, Search, CheckCircle } from 'lucide-react';
+import { useUser } from "../lib/hooks/useUser";
 
 const colorMap: Record<string, { primary: string; secondary: string; glow: string }> = {
   violet: { 
@@ -41,13 +42,19 @@ const colorMap: Record<string, { primary: string; secondary: string; glow: strin
 
 function CelestialOrb({ 
   classData, 
-  index 
+  index,
+  completedCount,
+  totalCount
 }: { 
   classData: typeof classes[0]; 
   index: number;
+  completedCount: number;
+  totalCount: number;
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const colors = colorMap[classData.colorScheme.primary] || colorMap.slate;
+  const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+  const isComplete = progress === 100;
   
   // Calculate orbital position for staggered layout
   const row = Math.floor(index / 3);
@@ -118,6 +125,38 @@ function CelestialOrb({
               }}
             />
             
+            {/* Progress ring */}
+            {progress > 0 && (
+              <svg 
+                className="absolute inset-0 w-full h-full -rotate-90"
+                viewBox="0 0 100 100"
+              >
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="46"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeWidth="2"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="46"
+                  fill="none"
+                  stroke={isComplete ? '#39FF14' : colors.primary}
+                  strokeWidth="2"
+                  strokeDasharray={`${2 * Math.PI * 46}`}
+                  strokeDashoffset={`${2 * Math.PI * 46 * (1 - progress / 100)}`}
+                  strokeLinecap="round"
+                  style={{
+                    filter: isComplete ? 'drop-shadow(0 0 4px #39FF14)' : `drop-shadow(0 0 4px ${colors.glow})`,
+                    transition: 'stroke-dashoffset 0.5s ease-out',
+                  }}
+                />
+              </svg>
+            )}
+            
             {/* Content overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
               <motion.div
@@ -126,10 +165,17 @@ function CelestialOrb({
                 transition={{ delay: 0.5 + index * 0.1 }}
                 className="mb-2"
               >
-                <Brain 
-                  className="w-8 h-8"
-                  style={{ color: colors.primary, filter: `drop-shadow(0 0 10px ${colors.glow})` }}
-                />
+                {isComplete ? (
+                  <CheckCircle 
+                    className="w-8 h-8"
+                    style={{ color: '#39FF14', filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))' }}
+                  />
+                ) : (
+                  <Brain 
+                    className="w-8 h-8"
+                    style={{ color: colors.primary, filter: `drop-shadow(0 0 10px ${colors.glow})` }}
+                  />
+                )}
               </motion.div>
               
               <h3 
@@ -188,7 +234,12 @@ function CelestialOrb({
         transition={{ delay: 0.8 + index * 0.1 }}
       >
         <p className="text-sm text-gray-400 font-medium">{classData.title}</p>
-        <p className="text-xs text-gray-600 mt-1">{classData.lessons.length} lessons</p>
+        <p className="text-xs mt-1" style={{ color: isComplete ? '#39FF14' : '#6B6B7E' }}>
+          {isComplete 
+            ? 'Complete ✓' 
+            : `${completedCount}/${totalCount} lessons${progress > 0 ? ` (${Math.round(progress)}%)` : ''}`
+          }
+        </p>
       </motion.div>
     </motion.div>
   );
@@ -197,6 +248,7 @@ function CelestialOrb({
 export default function ClassesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const { user } = useUser();
   
   // Filter classes based on search
   const filteredClasses = classes.filter(c => 
@@ -321,13 +373,21 @@ export default function ClassesPage() {
         {/* Celestial Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
           {filteredClasses.length > 0 ? (
-            filteredClasses.map((classData, index) => (
-              <CelestialOrb 
-                key={classData.id} 
-                classData={classData} 
-                index={index}
-              />
-            ))
+            filteredClasses.map((classData, index) => {
+              const completedLessons = classData.lessons.filter(lesson => 
+                user?.completedLessons?.includes(lesson.id)
+              ).length;
+              
+              return (
+                <CelestialOrb 
+                  key={classData.id} 
+                  classData={classData} 
+                  index={index}
+                  completedCount={completedLessons}
+                  totalCount={classData.lessons.length}
+                />
+              );
+            })
           ) : (
             <div className="col-span-full text-center py-12">
               <p style={{ color: '#6B6B7E' }}>
