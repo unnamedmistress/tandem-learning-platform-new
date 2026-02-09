@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { classes } from "../lib/data/classes";
 import { Sparkles, Search, ArrowRight, Play, CheckCircle } from 'lucide-react';
 import { useUser } from "../lib/hooks/useUser";
-import { PathSelector } from "../components/PathSelector";
+
 import { LessonPreviewModal } from "../components/LessonPreviewModal";
 
 const colorMap: Record<string, { primary: string; secondary: string; glow: string }> = {
@@ -252,16 +252,7 @@ export default function ClassesPage() {
           </motion.div>
         </motion.div>
         
-        {/* Path Selector - Compact */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mb-8"
-        >
-          <PathSelector />
-        </motion.div>
-        
+
         {/* Lesson Preview Button */}
         <motion.div
           initial={{ opacity: 0 }}
