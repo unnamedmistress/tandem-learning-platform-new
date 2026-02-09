@@ -12,8 +12,8 @@ import { cn } from "@/lib/utils";
 
 export default function ClassPage() {
   const params = useParams();
-  const classId = params.id as string;
-  const classData = classes.find((c) => c.id === classId);
+  const classId = params?.id as string | undefined;
+  const classData = classId ? classes.find((c) => c.id === classId) : undefined;
 
   if (!classData) {
     return (

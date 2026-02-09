@@ -14,8 +14,8 @@ export default function LessonPage() {
   const router = useRouter();
   const { completeLesson, addSkillToken } = useUser();
   
-  const classId = params.classId as string;
-  const lessonId = params.lessonId as string;
+  const classId = params?.classId as string | undefined;
+  const lessonId = params?.lessonId as string | undefined;
   
   const classData = classes.find((c) => c.id === classId);
   const lesson = classData?.lessons.find((l) => l.id === lessonId);
@@ -32,6 +32,7 @@ export default function LessonPage() {
   }
 
   const handleComplete = (depth: DepthLevel) => {
+    if (!lessonId) return;
     completeLesson(lessonId, depth);
     
     // Add skill token based on lesson
