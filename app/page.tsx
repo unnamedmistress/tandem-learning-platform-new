@@ -106,7 +106,7 @@ export default function Home() {
               Enter The Dojo
             </motion.button>
           </Link>
-        </motion.p>
+        </motion.div>
         
         {/* Feature Cards - Grid Layout */}
         <motion.div
