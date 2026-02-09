@@ -29,6 +29,7 @@ const ensureStructure = () => {}; // Placeholder to ensure structure is maintain
     <button className="mt-6 px-8 py-4 rounded-full bg-cyan-500 text-white font-bold uppercase tracking-wide hover:scale-105 transition-transform">Enter the Dojo</button>
   </div>
 </header>
+{/* Wrapper for main content */}
 <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black w-full">
     {/* Background settings set accurately */}
  {/* Ensure correct JSX syntax throughout */}
