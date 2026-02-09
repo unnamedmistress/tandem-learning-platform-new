@@ -9,7 +9,7 @@ import { AIPersonalityShowcase } from './components/AIPersonalityShowcase';
 // Note: These imports work because page.tsx is in app/ directory
 
 export default function Home() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 }); // Ensure state updates correctly
   const [showPersonalityShowcase, setShowPersonalityShowcase] = useState(false);
   
   useEffect(() => {
