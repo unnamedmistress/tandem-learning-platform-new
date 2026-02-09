@@ -12,7 +12,7 @@ export function PrivacyFooter() {
         borderColor: 'rgba(255, 255, 255, 0.05)',
       }}
     >
-      <div className="w-full max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-2 text-xs">
+      <div className="centered-container flex flex-col md:flex-row items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-4">
           <span style={{ color: '#6B6B7E' }}>
             Your conversations are processed locally • No data stored permanently

@@ -42,6 +42,7 @@
 @layer base {
   * {
     border-color: hsl(var(--border));
+    box-sizing: border-box;
   }
   
   html, body {
@@ -52,12 +53,16 @@
     width: 100%;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
   }
   
-  /* Force center alignment on all major containers */
-  #__next, main, .container {
+  /* Force center alignment on all content */
+  #__next {
     width: 100%;
-    max-width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   /* Selection */
@@ -141,12 +146,6 @@
   to { transform: rotate(360deg); }
 }
 
-@keyframes border-flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 /* Utility Classes */
 .animate-float {
   animation: float 6s ease-in-out infinite;
@@ -182,32 +181,6 @@
   animation: holographic-shimmer 3s linear infinite;
 }
 
-/* Gradient Borders */
-.border-gradient-cyan {
-  border: 2px solid transparent;
-  background: linear-gradient(var(--panel-bg), var(--panel-bg)) padding-box,
-              var(--gradient-human) border-box;
-}
-
-.border-gradient-magenta {
-  border: 2px solid transparent;
-  background: linear-gradient(var(--panel-bg), var(--panel-bg)) padding-box,
-              var(--gradient-ai) border-box;
-}
-
-.border-gradient-fusion {
-  border: 2px solid transparent;
-  background: linear-gradient(var(--panel-bg), var(--panel-bg)) padding-box,
-              var(--gradient-fusion) border-box;
-}
-
-/* Glass Effect */
-.glass {
-  background: rgba(18, 18, 26, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 /* Text Gradients */
 .text-gradient-human {
   background: var(--gradient-human);
@@ -230,106 +203,25 @@
   background-clip: text;
 }
 
-/* Neon Text Shadows */
-.text-glow-cyan {
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
-}
-
-.text-glow-magenta {
-  text-shadow: 0 0 10px rgba(255, 0, 110, 0.5), 0 0 20px rgba(255, 0, 110, 0.3);
-}
-
-/* Skill Token Animation */
-@keyframes token-earned {
-  0% { 
-    transform: scale(0) rotate(-180deg); 
-    opacity: 0;
-  }
-  50% { 
-    transform: scale(1.2) rotate(10deg); 
-    opacity: 1;
-  }
-  100% { 
-    transform: scale(1) rotate(0deg); 
-    opacity: 1;
-  }
-}
-
-@keyframes token-float {
-  0%, 100% { transform: translateY(0) rotateY(0deg); }
-  50% { transform: translateY(-15px) rotateY(5deg); }
-}
-
-.animate-token-earned {
-  animation: token-earned 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.animate-token-float {
-  animation: token-float 4s ease-in-out infinite;
-}
-
-/* Mirror Frame Animation */
-@keyframes mirror-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.mirror-frame {
-  position: relative;
-}
-
-.mirror-frame::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: var(--gradient-fusion);
-  animation: mirror-spin 8s linear infinite;
-  opacity: 0.5;
-}
-
-/* Neural Connection Lines */
-.neural-line {
-  stroke-dasharray: 5, 5;
-  animation: dash 1s linear infinite;
-}
-
-@keyframes dash {
-  to {
-    stroke-dashoffset: -10;
-  }
-}
-
-/* Centered container for large screens */
-.container-centered {
+/* Centered container utility */
+.centered-container {
   width: 100%;
-  max-width: 1920px;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
-/* Ensure all content is centered */
-.container {
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.mx-auto {
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
 @media (min-width: 640px) {
-  .container-centered {
+  .centered-container {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .container-centered {
+  .centered-container {
     padding-left: 2rem;
     padding-right: 2rem;
   }

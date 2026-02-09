@@ -14,7 +14,7 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="w-full max-w-[1400px] mx-auto px-4 py-8">
+      <div className="centered-container py-8">
         <p>Loading profile...</p>
       </div>
     );
@@ -31,7 +31,7 @@ export default function ProfilePage() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-4 py-8">
+    <div className="centered-container py-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">

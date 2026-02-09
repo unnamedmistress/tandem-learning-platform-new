@@ -298,7 +298,7 @@ export default function ClassesPage() {
         ))}
       </div>
       
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 py-16">
+      <div className="relative z-10 centered-container py-16">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

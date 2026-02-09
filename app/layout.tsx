@@ -35,8 +35,8 @@ export default function RootLayout({
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <UserProvider>
           <Navigation />
-          <main className="pb-16 min-h-screen w-full flex flex-col items-center">
-            <div className="w-full max-w-[1400px] px-4 sm:px-6 lg:px-8 xl:px-12">
+          <main className="w-full flex flex-col items-center">
+            <div className="centered-container w-full">
               {children}
             </div>
           </main>
