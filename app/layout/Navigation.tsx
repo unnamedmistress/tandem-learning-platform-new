@@ -4,14 +4,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { GraduationCap, Users, User, Brain, Sparkles } from "lucide-react";
+import { Tooltip } from "../components/Tooltip";
 
 export function Navigation() {
   const pathname = usePathname();
   
   const navItems = [
-    { href: "/classes", label: "Classes", icon: GraduationCap },
-    { href: "/challenges", label: "Challenges", icon: Users },
-    { href: "/profile", label: "My Skills", icon: Sparkles },
+    { 
+      href: "/classes", 
+      label: "Classes", 
+      icon: GraduationCap,
+      tooltip: "Browse AI practice classes by topic"
+    },
+    { 
+      href: "/challenges", 
+      label: "Challenges", 
+      icon: Users,
+      tooltip: "Community challenges and exercises"
+    },
+    { 
+      href: "/profile", 
+      label: "My Skills", 
+      icon: Sparkles,
+      tooltip: "Your earned skill tokens and progress"
+    },
   ];
   
   const isActive = (href: string) => pathname?.startsWith(href) ?? false;
@@ -61,38 +77,40 @@ export function Navigation() {
             const Icon = item.icon;
             
             return (
-              <Link key={item.href} href={item.href}>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`
-                    relative px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium
-                    transition-all duration-200
-                  `}
-                  style={{
-                    color: active ? '#fff' : '#8B8B9E',
-                    background: active 
-                      ? 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))'
-                      : 'transparent',
-                    border: active 
-                      ? '1px solid rgba(0, 240, 255, 0.3)'
-                      : '1px solid transparent',
-                  }}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden md:inline">{item.label}</span>
-                  
-                  {active && (
-                    <motion.div
-                      layoutId="nav-glow"
-                      className="absolute inset-0 rounded-lg -z-10"
-                      style={{
-                        boxShadow: '0 0 20px rgba(0, 240, 255, 0.2)',
-                      }}
-                    />
-                  )}
-                </motion.div>
-              </Link>
+              <Tooltip key={item.href} content={item.tooltip} position="bottom">
+                <Link href={item.href}>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`
+                      relative px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium
+                      transition-all duration-200 cursor-pointer
+                    `}
+                    style={{
+                      color: active ? '#fff' : '#8B8B9E',
+                      background: active 
+                        ? 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))'
+                        : 'transparent',
+                      border: active 
+                        ? '1px solid rgba(0, 240, 255, 0.3)'
+                        : '1px solid transparent',
+                    }}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="hidden md:inline">{item.label}</span>
+                    
+                    {active && (
+                      <motion.div
+                        layoutId="nav-glow"
+                        className="absolute inset-0 rounded-lg -z-10"
+                        style={{
+                          boxShadow: '0 0 20px rgba(0, 240, 255, 0.2)',
+                        }}
+                      />
+                    )}
+                  </motion.div>
+                </Link>
+              </Tooltip>
             );
           })}
           
