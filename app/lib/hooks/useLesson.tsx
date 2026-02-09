@@ -17,11 +17,15 @@ export function useLesson(lessonId: string, classId: string) {
   const advancePhase = useCallback(() => {
     setProgress((prev) => {
       const phaseOrder: ("a" | "b" | "c" | "d")[] = ["a", "b", "c", "d"];
-      const currentIndex = phaseOrder.indexOf(prev.currentPhase);
+      // Handle case where phase is already completed
+      if (prev.currentPhase === "completed") {
+        return prev;
+      }
+      const currentIndex = phaseOrder.indexOf(prev.currentPhase as "a" | "b" | "c" | "d");
       const nextPhase = phaseOrder[currentIndex + 1];
       
       if (!nextPhase) {
-        return { ...prev, currentPhase: "a" };
+        return { ...prev, currentPhase: "completed" };
       }
       
       return { ...prev, currentPhase: nextPhase };
