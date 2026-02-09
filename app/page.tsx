@@ -21,9 +21,9 @@ export default function Home() {
   }, []);
   
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0A0A0F] w-full">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black w-full">
       {/* Animated Background Grid */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
+      <div className="absolute inset-0 opacity-30 pointer-events-none flex items-center justify-center" style={{backgroundImage: 'url(/path-to-hero-image.jpg)', backgroundSize: 'cover'}}>
         <div 
           className="absolute inset-0"
           style={{
@@ -123,7 +123,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-bold mb-2 sm:mb-4 text-center"
+          className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold mb-6 sm:mb-8 text-center bg-gradient-to-r from-cyan-400 to-pink-600 bg-clip-text text-transparent"
         >
           <span className="text-white">TAN</span>
           <span 

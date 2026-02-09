@@ -36,14 +36,14 @@ export function Navigation() {
   
   return (
     <nav 
-      className="fixed top-0 left-0 right-0 z-50 border-b bg-opacity-90 backdrop-blur-lg"
+      className="fixed top-0 left-0 right-0 z-50 border-b bg-opacity-90 backdrop-blur-lg flex items-center justify-between bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 text-white py-4 px-8"
       style={{
         background: 'rgba(10, 10, 15, 0.95)',
         backdropFilter: 'blur(12px)',
         borderColor: 'rgba(255, 255, 255, 0.1)',
       }}
     >
-      <div className=" px-4 h-16 flex items-center justify-between">
+      <div className="h-16 flex items-center justify-around w-full">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <motion.div
