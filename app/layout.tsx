@@ -50,7 +50,7 @@ export default function RootLayout({
         }}
       >
         <UserProvider>
-          <Navigation />
+          <nav className="flex justify-between items-center py-4 px-8 bg-gradient-to-r from-cyan-500 to-pink-500 text-white fixed w-full top-0 shadow-md"></nav>
           <main 
             style={{
               width: '100%',
