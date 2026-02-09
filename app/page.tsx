@@ -102,7 +102,7 @@ export default function Home() {
               }}
             >
               <span 
-                className="text-5xl font-bold"
+                className="text-4xl sm:text-5xl font-bold"
                 style={{
                   background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
                   WebkitBackgroundClip: 'text',
