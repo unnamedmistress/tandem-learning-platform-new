@@ -32,11 +32,35 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body 
+        className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        style={{
+          background: '#0A0A0F',
+          minHeight: '100vh',
+          width: '100%',
+        }}
+      >
         <UserProvider>
           <Navigation />
-          <main className="w-full flex flex-col items-center">
-            <div className="centered-container w-full">
+          <main 
+            style={{
+              width: '100%',
+              minHeight: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <div 
+              style={{
+                width: '100%',
+                maxWidth: '1200px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                paddingLeft: '1rem',
+                paddingRight: '1rem',
+              }}
+            >
               {children}
             </div>
           </main>

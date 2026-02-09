@@ -43,7 +43,7 @@ export function Navigation() {
         borderColor: 'rgba(255, 255, 255, 0.1)',
       }}
     >
-      <div className="centered-container px-4 h-16 flex items-center justify-between">
+      <div className=" px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <motion.div

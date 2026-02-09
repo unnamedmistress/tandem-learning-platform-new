@@ -66,7 +66,7 @@ export default function ChallengesPage() {
   };
 
   return (
-    <div className="centered-container py-8">
+    <div className=" py-8">
       <div className="max-w-2xl mx-auto text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">Challenge Board</h1>
         <p className="text-lg text-muted-foreground">
