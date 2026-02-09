@@ -44,11 +44,20 @@
     border-color: hsl(var(--border));
   }
   
-  body {
+  html, body {
     background: var(--void-black);
     color: hsl(var(--foreground));
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Force center alignment on all major containers */
+  #__next, main, .container {
+    width: 100%;
+    max-width: 100%;
   }
   
   /* Selection */

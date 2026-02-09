@@ -74,7 +74,7 @@ export default function Home() {
       />
       
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen w-full">
         
         {/* Logo Animation */}
         <motion.div
