@@ -151,7 +151,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex items-center justify-center py-8"
+            className="min-h-[80vh] flex flex-col md:flex-row items-center justify-evenly py-12 px-4"
           >
             <OnboardingPersonalitySelector 
               onSelect={handlePersonalitySelect}
@@ -223,7 +223,7 @@ export default function OnboardingPage() {
               >
                 <h3 className="text-lg font-semibold mb-4 text-white">Your Setup</h3>
                 
-                <div className="space-y-3 text-left">
+                <div className="space-y-3 text-left grid grid-cols-1 md:grid-cols-2 gap-4">
                   {userGoals.length > 0 && (
                     <div className="flex items-start gap-3">
                       <Sparkles className="w-5 h-5 text-cyan-400 mt-0.5" />

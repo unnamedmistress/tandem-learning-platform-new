@@ -36,7 +36,7 @@ export function Navigation() {
   
   return (
     <nav 
-      className="fixed top-0 left-0 right-0 z-50 border-b"
+      className="fixed top-0 left-0 right-0 z-50 border-b bg-opacity-90 backdrop-blur-lg"
       style={{
         background: 'rgba(10, 10, 15, 0.95)',
         backdropFilter: 'blur(12px)',
