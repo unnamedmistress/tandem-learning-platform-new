@@ -9,9 +9,9 @@ export function Navigation() {
   const pathname = usePathname();
   
   const navItems = [
-    { href: "/classes", label: "Training", icon: GraduationCap },
+    { href: "/classes", label: "Classes", icon: GraduationCap },
     { href: "/challenges", label: "Challenges", icon: Users },
-    { href: "/profile", label: "Artifacts", icon: Sparkles },
+    { href: "/profile", label: "My Skills", icon: Sparkles },
   ];
   
   const isActive = (href: string) => pathname?.startsWith(href) ?? false;

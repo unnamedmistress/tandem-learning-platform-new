@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "./layout/Navigation";
+import { PrivacyFooter } from "./layout/PrivacyFooter";
 import { UserProvider } from "./lib/hooks/useUser";
 
 const inter = Inter({ 
@@ -34,9 +35,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <UserProvider>
           <Navigation />
-          <main>
+          <main className="pb-16">
             {children}
           </main>
+          <PrivacyFooter />
         </UserProvider>
       </body>
     </html>

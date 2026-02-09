@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { classes } from "../lib/data/classes";
-import { Brain, Sparkles, ArrowRight } from 'lucide-react';
+import { Brain, Sparkles, ArrowRight, Search } from 'lucide-react';
 
 const colorMap: Record<string, { primary: string; secondary: string; glow: string }> = {
   violet: { 
@@ -195,6 +195,29 @@ function CelestialOrb({
 }
 
 export default function ClassesPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  
+  // Filter classes based on search
+  const filteredClasses = classes.filter(c => 
+    searchQuery === '' || 
+    c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.theme.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  // Keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '/' && !isSearchFocused) {
+        e.preventDefault();
+        document.getElementById('class-search')?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSearchFocused]);
+  
   return (
     <div className="min-h-screen bg-[#0A0A0F] relative overflow-hidden">
       {/* Background constellation effect */}
@@ -250,22 +273,75 @@ export default function ClassesPage() {
             Choose Your Path
           </h1>
           
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: '#6B6B7E' }}>
+          <p className="text-lg max-w-2xl mx-auto mb-8" style={{ color: '#6B6B7E' }}>
             Each celestial body represents a different way of working with AI.
             <br />
             <span style={{ color: '#8B8B9E' }}>Hover to explore. Click to enter.</span>
           </p>
+          
+          {/* Search */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="max-w-md mx-auto"
+          >
+            <div 
+              className="relative flex items-center"
+              style={{
+                border: `1px solid ${isSearchFocused ? '#00F0FF' : 'rgba(255,255,255,0.1)'}`,
+                borderRadius: '9999px',
+                background: 'rgba(0,0,0,0.3)',
+                transition: 'border-color 0.2s',
+              }}
+            >
+              <Search className="w-5 h-5 ml-4" style={{ color: '#6B6B7E' }} />
+              <input
+                id="class-search"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                placeholder="Search classes... (Press / to focus)"
+                className="w-full bg-transparent text-white placeholder-gray-600 px-4 py-3 focus:outline-none"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="mr-4 text-gray-500 hover:text-white"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </motion.div>
         </motion.div>
         
         {/* Celestial Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-          {classes.map((classData, index) => (
-            <CelestialOrb 
-              key={classData.id} 
-              classData={classData} 
-              index={index}
-            />
-          ))}
+          {filteredClasses.length > 0 ? (
+            filteredClasses.map((classData, index) => (
+              <CelestialOrb 
+                key={classData.id} 
+                classData={classData} 
+                index={index}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p style={{ color: '#6B6B7E' }}>
+                No classes match &quot;{searchQuery}&quot;
+              </p>
+              <button
+                onClick={() => setSearchQuery('')}
+                className="mt-2 text-sm"
+                style={{ color: '#00F0FF' }}
+              >
+                Clear search
+              </button>
+            </div>
+          )}
         </div>
         
         {/* Footer */}

@@ -22,10 +22,10 @@
     --ring: 186 100% 47%;
     --radius: 0.75rem;
     
-    /* Cyber Brand Colors */
-    --human-cyan: #00F0FF;
-    --ai-magenta: #FF006E;
-    --fusion-purple: #B829DD;
+    /* Cyber Brand Colors - Reduced brightness for accessibility */
+    --human-cyan: #00C8D4;
+    --ai-magenta: #E6005C;
+    --fusion-purple: #A020D0;
     --success-neon: #39FF14;
     --void-black: #0A0A0F;
     --panel-bg: #12121A;

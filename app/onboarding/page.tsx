@@ -51,12 +51,22 @@ export default function OnboardingPage() {
                 animate={{ y: 0, opacity: 1 }}
                 className="text-center mb-12"
               >
-                <span 
-                  className="text-sm uppercase tracking-widest font-mono mb-4 block"
-                  style={{ color: '#00F0FF' }}
-                >
-                  Initiation Protocol 01
-                </span>
+                <div className="flex justify-between items-start mb-4">
+                  <span 
+                    className="text-sm uppercase tracking-widest font-mono"
+                    style={{ color: '#00F0FF' }}
+                  >
+                    Initiation Protocol 01
+                  </span>
+                  <Link href="/classes">
+                    <button 
+                      className="text-xs uppercase tracking-wider px-3 py-1 rounded border border-gray-700 text-gray-500 hover:text-white hover:border-gray-500 transition-all"
+                      title="Skip onboarding and go directly to classes"
+                    >
+                      Skip →
+                    </button>
+                  </Link>
+                </div>
                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                   What&apos;s your challenge?
                 </h1>
