@@ -41,7 +41,7 @@ export default function Home() {
               linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px)
             `,
             backgroundSize: '50px 50px',
-            transform: `perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px)`,
+            transform: 'perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px)',
             transformOrigin: 'center top',
           }}
         />
