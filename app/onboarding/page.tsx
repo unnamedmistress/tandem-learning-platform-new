@@ -18,7 +18,7 @@ export default function OnboardingPage() {
   const steps: OnboardingStep[] = ['welcome', 'how-it-works', 'goals', 'personality', 'ready'];
   const currentStepIndex = steps.indexOf(step);
 
-  const handleGoalsSubmit = (goals: string[]) => {
+  const handleGoalsSubmit = (goalId: string, goalTitle: string) => {
     setUserGoals(goals);
     setStep('personality');
   };
