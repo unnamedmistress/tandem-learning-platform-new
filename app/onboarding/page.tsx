@@ -2,26 +2,34 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SplitContainer } from '../components/SplitContainer';
-import { NeuralConnector } from '../components/NeuralConnector';
-import { MirrorFrame } from '../components/MirrorFrame';
 import Link from 'next/link';
+import { GoalSetter } from '../components/GoalSetter';
+import { OnboardingPersonalitySelector } from '../components/OnboardingPersonalitySelector';
+import { LearningLoopDemo } from '../components/LearningLoopDemo';
+import { Trophy, Sparkles } from 'lucide-react';
+
+type OnboardingStep = 'welcome' | 'how-it-works' | 'goals' | 'personality' | 'ready';
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState(1);
-  const [problem, setProblem] = useState('');
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [step, setStep] = useState<OnboardingStep>('welcome');
+  const [userGoals, setUserGoals] = useState<string[]>([]);
+  const [selectedPersonality, setSelectedPersonality] = useState<{id: string, name: string} | null>(null);
   
-  const handleStartCollaboration = () => {
-    setIsConnecting(true);
-    setTimeout(() => {
-      setStep(2);
-      setIsConnecting(false);
-    }, 2000);
+  const steps: OnboardingStep[] = ['welcome', 'how-it-works', 'goals', 'personality', 'ready'];
+  const currentStepIndex = steps.indexOf(step);
+
+  const handleGoalsSubmit = (goals: string[]) => {
+    setUserGoals(goals);
+    setStep('personality');
+  };
+
+  const handlePersonalitySelect = (id: string, name: string) => {
+    setSelectedPersonality({ id, name });
+    setStep('ready');
   };
   
   return (
-    <div className="min-h-screen bg-[#0A0A0F]">
+    <div className="min-h-screen bg-[#0A0A0F] py-8 px-4">
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-[#1a1a25] z-50">
         <motion.div
@@ -30,309 +38,138 @@ export default function OnboardingPage() {
             background: 'linear-gradient(90deg, #00F0FF, #B829DD, #FF006E)',
           }}
           initial={{ width: '0%' }}
-          animate={{ width: `${(step / 5) * 100}%` }}
+          animate={{ width: `${((currentStepIndex + 1) / steps.length) * 100}%` }}
           transition={{ duration: 0.5 }}
         />
       </div>
+
+      {/* Skip button */}
+      <div className="fixed top-4 right-4 z-40">
+        <Link href="/classes">
+          <button className="text-xs uppercase tracking-wider px-4 py-2 rounded-lg border border-slate-700 text-slate-500 hover:text-white hover:border-slate-500 transition-all">
+            Skip →
+          </button>
+        </Link>
+      </div>
       
       <AnimatePresence mode="wait">
-        {/* Step 1: The Problem */}
-        {step === 1 && (
+        {/* Step 1: Welcome */}
+        {step === 'welcome' && (
           <motion.div
-            key="step1"
+            key="welcome"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-4"
+            className="min-h-[80vh] flex items-center justify-center"
           >
-            <div className="max-w-2xl w-full">
+            <div className="text-center max-w-2xl">
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="text-center mb-12"
+                className="mb-8"
               >
-                <div className="flex justify-between items-start mb-4">
-                  <span 
-                    className="text-xs sm:text-sm uppercase tracking-widest font-mono"
-                    style={{ color: '#00F0FF' }}
-                  >
-                    Step 1 of 4
-                  </span>
-                  <Link href="/classes">
-                    <button 
-                      className="text-xs uppercase tracking-wider px-3 py-2 rounded border border-gray-700 text-gray-500 hover:text-white hover:border-gray-500 transition-all min-h-[44px]"
-                      title="Skip onboarding and go directly to classes"
-                    >
-                      Skip →
-                    </button>
-                  </Link>
-                </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-                  What&apos;s your challenge?
+                <div className="text-6xl mb-6">🎯</div>
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
+                  Welcome to TANDEM
                 </h1>
-                <p className="text-gray-400 text-base sm:text-lg">
-                  Bring a real problem from your work. This is your training ground.
+                <p className="text-xl text-slate-400">
+                  The Collaboration Dojo where you master working with AI
                 </p>
               </motion.div>
-              
+
               <motion.div
                 initial={{ y: 40, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
+                className="space-y-4 mb-12"
               >
-                <div 
-                  className="relative rounded-2xl p-1"
-                  style={{
-                    background: 'linear-gradient(135deg, #00F0FF, #B829DD, #FF006E)',
-                  }}
-                >
-                  <div className="bg-[#12121A] rounded-2xl p-6">
-                    <textarea
-                      value={problem}
-                      onChange={(e) => setProblem(e.target.value)}
-                      placeholder="I need to... but I'm struggling with..."
-                      className="w-full h-40 bg-transparent text-white placeholder-gray-600 resize-none focus:outline-none text-lg"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    />
-                    <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-800">
-                      <span className="text-xs text-gray-500 font-mono">
-                        {problem.length} characters
-                      </span>
-                      <button
-                        onClick={handleStartCollaboration}
-                        disabled={problem.length < 20}
-                        className="px-6 py-3 rounded-lg font-bold uppercase tracking-wider text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                        style={{
-                          background: problem.length >= 20 
-                            ? 'linear-gradient(135deg, #00F0FF, #FF006E)'
-                            : '#2a2a35',
-                          color: problem.length >= 20 ? '#0A0A0F' : '#666',
-                        }}
-                      >
-                        {isConnecting ? 'Connecting...' : 'Initialize Collaboration'}
-                      </button>
-                    </div>
+                <div className="flex items-center justify-center gap-8 text-slate-500">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🧠</span>
+                    <span>6 Practice Classes</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">✨</span>
+                    <span>4 AI Partners</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🏆</span>
+                    <span>∞ Skill Tokens</span>
                   </div>
                 </div>
               </motion.div>
-              
-              {isConnecting && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-8"
-                >
-                  <NeuralConnector intensity="high" state="pulsing" />
-                </motion.div>
-              )}
+
+              <motion.button
+                initial={{ y: 60, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                onClick={() => setStep('how-it-works')}
+                className="px-12 py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-cyan-500 to-pink-500 text-white hover:shadow-[0_0_40px_rgba(0,240,255,0.3)] transition-all"
+              >
+                See How It Works →
+              </motion.button>
             </div>
           </motion.div>
         )}
-        
-        {/* Step 2: The Collaboration */}
-        {step === 2 && (
+
+        {/* Step 2: How It Works */}
+        {step === 'how-it-works' && (
           <motion.div
-            key="step2"
+            key="how-it-works"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="min-h-[80vh] flex items-center justify-center py-8"
           >
-            <SplitContainer
-              humanSide={
-                <div className="h-full flex flex-col">
-                  <h3 className="text-lg font-bold text-white mb-4">Your Input</h3>
-                  <div 
-                    className="flex-1 p-4 rounded-lg font-mono text-sm overflow-auto"
-                    style={{ 
-                      background: 'rgba(0, 240, 255, 0.05)',
-                      border: '1px solid rgba(0, 240, 255, 0.2)',
-                      color: '#00F0FF',
-                    }}
-                  >
-                    {problem}
-                  </div>
-                </div>
-              }
-              aiSide={
-                <div className="h-full flex flex-col">
-                  <h3 className="text-lg font-bold text-white mb-4">AI Analysis</h3>
-                  <div 
-                    className="flex-1 p-4 rounded-lg overflow-auto"
-                    style={{ 
-                      background: 'rgba(255, 0, 110, 0.05)',
-                      border: '1px solid rgba(255, 0, 110, 0.2)',
-                    }}
-                  >
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.5, staggerChildren: 0.1 }}
-                      className="space-y-3"
-                    >
-                      <p style={{ color: '#FF006E' }}>Processing input...</p>
-                      <motion.p 
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.8 }}
-                        className="text-gray-300"
-                      >
-                        I see you&apos;re dealing with a complex challenge. Let&apos;s break this down together.
-                      </motion.p>
-                      <motion.p
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1.2 }}
-                        className="text-gray-300"
-                      >
-                        What&apos;s your first instinct about how to approach this?
-                      </motion.p>
-                    </motion.div>
-                  </div>
-                </div>
-              }
-              fusion={
-                <div className="text-center">
-                  <NeuralConnector intensity="high" state="active" />
-                  <p className="text-gray-500 text-sm mt-4">
-                    Collaboration link established. Neural connection active.
-                  </p>
-                  <button
-                    onClick={() => setStep(3)}
-                    className="mt-6 px-8 py-3 rounded-lg font-bold uppercase tracking-wider text-sm"
-                    style={{
-                      background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-                      color: '#0A0A0F',
-                    }}
-                  >
-                    Continue to Reflection
-                  </button>
-                </div>
-              }
+            <LearningLoopDemo 
+              onComplete={() => setStep('goals')}
+              autoPlay={false}
             />
           </motion.div>
         )}
-        
-        {/* Step 3: The Mirror */}
-        {step === 3 && (
+
+        {/* Step 3: Set Goals */}
+        {step === 'goals' && (
           <motion.div
-            key="step3"
+            key="goals"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-4"
+            className="min-h-[80vh] flex items-center justify-center py-8"
           >
-            <div className="max-w-4xl w-full">
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="text-center mb-12"
-              >
-                <span 
-                  className="text-sm uppercase tracking-widest font-mono mb-4 block"
-                  style={{ color: '#B829DD' }}
-                >
-                  Reflection Protocol
-                </span>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                  The Mirror
-                </h1>
-                <p className="text-gray-400">
-                  What you see is your collaboration pattern emerging
-                </p>
-              </motion.div>
-              
-              <div className="flex flex-col md:flex-row items-center gap-12">
-                {/* Mirror Visualization */}
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="relative w-80 h-80"
-                >
-                  <MirrorFrame pattern="constellation">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <div 
-                          className="text-6xl mb-2"
-                          style={{
-                            background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                          }}
-                        >
-                          👤
-                        </div>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest">
-                          Your Pattern
-                        </p>
-                      </div>
-                    </div>
-                  </MirrorFrame>
-                </motion.div>
-                
-                {/* Pattern Analysis */}
-                <motion.div
-                  initial={{ x: 40, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="flex-1 space-y-4"
-                >
-                  <div 
-                    className="p-6 rounded-xl"
-                    style={{
-                      background: 'rgba(0, 240, 255, 0.05)',
-                      border: '1px solid rgba(0, 240, 255, 0.2)',
-                    }}
-                  >
-                    <h3 className="font-bold mb-2" style={{ color: '#00F0FF' }}>
-                      Quick Exchanges
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      You kept messages brief. Sometimes that works, but more detail often helps AI understand context.
-                    </p>
-                  </div>
-                  
-                  <div 
-                    className="p-6 rounded-xl"
-                    style={{
-                      background: 'rgba(255, 0, 110, 0.05)',
-                      border: '1px solid rgba(255, 0, 110, 0.2)',
-                    }}
-                  >
-                    <h3 className="font-bold mb-2" style={{ color: '#FF006E' }}>
-                      Accepting Responses
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      You went with AI&apos;s suggestions. That&apos;s fine for exploration, but verification builds judgment.
-                    </p>
-                  </div>
-                  
-                  <button
-                    onClick={() => setStep(4)}
-                    className="w-full py-4 rounded-lg font-bold uppercase tracking-wider"
-                    style={{
-                      background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-                      color: '#0A0A0F',
-                    }}
-                  >
-                    Claim Your First Artifact
-                  </button>
-                </motion.div>
-              </div>
-            </div>
+            <GoalSetter 
+              onComplete={handleGoalsSubmit}
+              onBack={() => setStep('how-it-works')}
+            />
           </motion.div>
         )}
-        
-        {/* Step 4: The Artifact */}
-        {step === 4 && (
+
+        {/* Step 4: Choose Personality */}
+        {step === 'personality' && (
           <motion.div
-            key="step4"
+            key="personality"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center px-4"
+            className="min-h-[80vh] flex items-center justify-center py-8"
           >
-            <div className="text-center">
+            <OnboardingPersonalitySelector 
+              onSelect={handlePersonalitySelect}
+              onBack={() => setStep('goals')}
+            />
+          </motion.div>
+        )}
+
+        {/* Step 5: Ready */}
+        {step === 'ready' && (
+          <motion.div
+            key="ready"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="min-h-[80vh] flex items-center justify-center"
+          >
+            <div className="text-center max-w-2xl">
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -341,11 +178,9 @@ export default function OnboardingPage() {
               >
                 <div className="inline-block">
                   <div 
-                    className="w-64 h-80 rounded-2xl p-8 flex flex-col items-center justify-center"
+                    className="w-64 h-80 rounded-2xl p-8 flex flex-col items-center justify-center border-2 border-transparent"
                     style={{
                       background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))',
-                      border: '2px solid transparent',
-                      backgroundClip: 'padding-box',
                       boxShadow: '0 0 60px rgba(0, 240, 255, 0.3), inset 0 0 60px rgba(255, 0, 110, 0.1)',
                     }}
                   >
@@ -370,34 +205,73 @@ export default function OnboardingPage() {
                         WebkitTextFillColor: 'transparent',
                       }}
                     >
-                      First Contact
+                      You're Ready
                     </h3>
-                    <p className="text-sm text-gray-400">
-                      You completed your first collaboration session
+                    <p className="text-sm text-slate-400">
+                      Your training begins now
                     </p>
                   </div>
+                </div>
+              </motion.div>
+
+              {/* Summary */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="bg-slate-800/50 rounded-xl p-6 mb-8 border border-slate-700"
+              >
+                <h3 className="text-lg font-semibold mb-4 text-white">Your Setup</h3>
+                
+                <div className="space-y-3 text-left">
+                  {userGoals.length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <Sparkles className="w-5 h-5 text-cyan-400 mt-0.5" />
+                      <div>
+                        <span className="text-slate-400">Goals:</span>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {userGoals.map(goal => (
+                            <span key={goal} className="text-sm px-2 py-1 rounded bg-cyan-500/10 text-cyan-400">
+                              {goal === 'write-better-prompts' && 'Write Better Prompts'}
+                              {goal === 'automate-work' && 'Automate Repetitive Work'}
+                              {goal === 'learn-ai-fundamentals' && 'Learn AI Fundamentals'}
+                              {goal === 'creative-projects' && 'Creative Projects'}
+                              {goal === 'professional-communication' && 'Professional Communication'}
+                              {goal === 'technical-problem-solving' && 'Technical Problem Solving'}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {selectedPersonality && (
+                    <div className="flex items-center gap-3">
+                      <Trophy className="w-5 h-5 text-pink-400" />
+                      <div>
+                        <span className="text-slate-400">AI Partner: </span>
+                        <span className="text-white font-medium">{selectedPersonality.name}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
               
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.7 }}
               >
-                <p className="text-gray-400 mb-6">
-                  This artifact has been added to your collection
-                </p>
                 <Link href="/classes">
                   <button
-                    className="px-12 py-4 rounded-lg font-bold uppercase tracking-widest"
-                    style={{
-                      background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-                      color: '#0A0A0F',
-                    }}
+                    className="px-12 py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-cyan-500 to-pink-500 text-white hover:shadow-[0_0_40px_rgba(0,240,255,0.3)] transition-all"
                   >
-                    Enter Training Halls
+                    Enter the Dojo →
                   </button>
                 </Link>
+                <p className="text-slate-500 text-sm mt-4">
+                  You can change your goals and AI partner anytime
+                </p>
               </motion.div>
             </div>
           </motion.div>
