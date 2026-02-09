@@ -29,9 +29,9 @@ export default function OnboardingPage() {
   };
   
   return (
-    <div className="min-h-screen bg-[#0A0A0F] py-8 px-4">
+    <div className="min-h-screen bg-[#0A0A0F] py-12 px-8">
       {/* Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-[#1a1a25] z-50">
+      <div className="fixed top-0 left-0 right-0 h-1 bg-[#181820] z-50">
         <motion.div
           className="h-full"
           style={{
@@ -62,11 +62,11 @@ export default function OnboardingPage() {
             exit={{ opacity: 0 }}
             className="min-h-[80vh] flex items-center justify-center"
           >
-            <div className="text-center max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mx-auto max-w-screen-lg">
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="mb-8"
+                className="mb-8 text-left"
               >
                 <div className="text-6xl mb-6">🎯</div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
@@ -83,7 +83,7 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.2 }}
                 className="space-y-4 mb-12"
               >
-                <div className="flex items-center justify-center gap-8 text-slate-500">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-slate-500 justify-items-center">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">🧠</span>
                     <span>6 Practice Classes</span>
