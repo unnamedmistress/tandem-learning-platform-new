@@ -25,7 +25,7 @@ export function Navigation() {
 
         <div className="flex items-center gap-1">
           {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.href);
+            const isActive = pathname?.startsWith(item.href) ?? false;
             const Icon = item.icon;
             
             return (
