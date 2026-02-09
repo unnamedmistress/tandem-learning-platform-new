@@ -32,12 +32,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <style dangerouslySetInnerHTML={{__html: `
+          * { text-align: center !important; }
+          body { margin: 0 auto !important; }
+        `}} />
+      </head>
       <body 
         className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}
         style={{
           background: '#0A0A0F',
           minHeight: '100vh',
           width: '100%',
+          margin: '0 auto',
+          textAlign: 'center',
         }}
       >
         <UserProvider>
