@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { NeuralConnector } from './components/NeuralConnector';
 import { HolographicCard } from './components/HolographicCard';
+import { AIPersonalityShowcase } from './components/AIPersonalityShowcase';
 // Note: These imports work because page.tsx is in app/ directory
 
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [showPersonalityShowcase, setShowPersonalityShowcase] = useState(false);
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -218,11 +220,12 @@ export default function Home() {
           </div>
           
           <div 
-            className="p-4 sm:p-6 rounded-xl border text-center flex-1 sm:flex-none sm:max-w-xs"
+            className="p-4 sm:p-6 rounded-xl border text-center flex-1 sm:flex-none sm:max-w-xs cursor-pointer transition-all hover:scale-[1.02]"
             style={{
               background: 'rgba(255, 0, 110, 0.05)',
               borderColor: 'rgba(255, 0, 110, 0.2)',
             }}
+            onClick={() => setShowPersonalityShowcase(true)}
           >
             <div 
               className="text-2xl sm:text-3xl mb-1 sm:mb-2"
@@ -267,6 +270,12 @@ export default function Home() {
             icon="✦"
           />
         </motion.div>
+        
+        {/* AI Personality Showcase Modal */}
+        <AIPersonalityShowcase 
+          isOpen={showPersonalityShowcase} 
+          onClose={() => setShowPersonalityShowcase(false)} 
+        />
       </div>
     </div>
   );

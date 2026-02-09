@@ -60,16 +60,21 @@ export function Navigation() {
               style={{ color: '#00F0FF' }}
             />
           </motion.div>
-          <span 
-            className="font-bold text-xl tracking-wider hidden sm:block"
-            style={{
-              background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            TANDEM
-          </span>
+          <div className="flex flex-col">
+            <span 
+              className="font-bold text-xl tracking-wider hidden sm:block"
+              style={{
+                background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              TANDEM
+            </span>
+            <span className="text-[10px] uppercase tracking-wider text-emerald-400 hidden sm:block">
+              Free During Beta
+            </span>
+          </div>
         </Link>
         
         {/* Desktop Nav Items */}
