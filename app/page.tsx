@@ -24,6 +24,7 @@ const ensureStructure = () => {}; // Placeholder to ensure structure is maintain
   return (
     <header className="flex items-center justify-center h-screen bg-gradient-to-b from-purple-900 via-black to-black">
   <div className="text-center px-4">
+    {/* Confirm Div Structure */}
     <h1 className="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-600">TANDEM</h1>
     <p className="mt-4 text-xl md:text-2xl text-gray-300">The Collaboration Dojo</p>
     <button className="mt-6 px-8 py-4 rounded-full bg-cyan-500 text-white font-bold uppercase tracking-wide hover:scale-105 transition-transform">Enter the Dojo</button>
