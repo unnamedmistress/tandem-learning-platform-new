@@ -35,8 +35,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <UserProvider>
           <Navigation />
-          <main className="pb-16">
-            {children}
+          <main className="pb-16 min-h-screen">
+            <div className="mx-auto w-full max-w-[1920px]">
+              {children}
+            </div>
           </main>
           <PrivacyFooter />
         </UserProvider>
