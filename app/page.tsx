@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { NeuralConnector } from './components/NeuralConnector';
@@ -11,8 +11,23 @@ import { AIPersonalityShowcase } from './components/AIPersonalityShowcase';
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showPersonalityShowcase, setShowPersonalityShowcase] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  
+  // Generate particle positions only on client side to avoid hydration mismatch
+  const particles = useMemo(() => {
+    if (!isClient) return [];
+    return [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      color: i % 2 === 0 ? '#00F0FF' : '#FF006E',
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+  }, [isClient]);
   
   useEffect(() => {
+    setIsClient(true);
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
@@ -38,29 +53,31 @@ export default function Home() {
         />
       </div>
       
-      {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full"
-            style={{
-              background: i % 2 === 0 ? '#00F0FF' : '#FF006E',
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
+      {/* Floating Particles - Only render on client */}
+      {isClient && (
+        <div className="absolute inset-0 pointer-events-none">
+          {particles.map((particle) => (
+            <motion.div
+              key={particle.id}
+              className="absolute w-1 h-1 rounded-full"
+              style={{
+                background: particle.color,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: particle.duration,
+                repeat: Infinity,
+                delay: particle.delay,
+              }}
+            />
+          ))}
+        </div>
+      )}
       
       {/* Mouse-following glow */}
       <div 
