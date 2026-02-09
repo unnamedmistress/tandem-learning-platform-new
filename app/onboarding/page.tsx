@@ -60,7 +60,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex items-center justify-center"
+            className="min-h-[80vh] grid grid-cols-1 md:grid-cols-2 gap-8 items-center container mx-auto py-12 px-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mx-auto max-w-screen-lg">
               <motion.div
