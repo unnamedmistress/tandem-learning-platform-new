@@ -11,6 +11,7 @@ import { AIPersonalityShowcase } from './components/AIPersonalityShowcase';
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 }); // Ensure state updates correctly
   const [showPersonalityShowcase, setShowPersonalityShowcase] = useState(false);
+const ensureStructure = () => {}; // Placeholder to ensure structure is maintained
   
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
