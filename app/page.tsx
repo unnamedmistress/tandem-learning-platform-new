@@ -29,6 +29,7 @@ export default function Home() {
   </div>
 </header>
 <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black w-full">
+    {/* Corrected JSX Syntax for Background */}
  <!-- Ensure correct JSX syntax throughout -->
       {/* Animated Background Grid */}
       <div className="absolute inset-0 opacity-30 pointer-events-none flex items-center justify-center" style={{ backgroundImage: 'url(/path-to-hero-image.jpg)', backgroundSize: 'cover' }}>
