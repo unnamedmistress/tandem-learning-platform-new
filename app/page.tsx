@@ -1,317 +1,274 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Brain, ArrowRight, Sparkles, MessageCircle, BarChart3 } from "lucide-react";
-import { AIChat } from "./components/AIChat";
-import { useUser } from "./lib/hooks/useUser";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { NeuralConnector } from './components/NeuralConnector';
+import { HolographicCard } from './components/HolographicCard';
+// Note: These imports work because page.tsx is in app/ directory
 
 export default function Home() {
-  const router = useRouter();
-  const { user, recordInteraction } = useUser();
-  const [step, setStep] = useState<"intro" | "problem" | "chat" | "reflection" | "complete">("intro");
-  const [problem, setProblem] = useState("");
-  const [chatMessages, setChatMessages] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
-  const [reflection, setReflection] = useState("");
-  const [patternNoticed, setPatternNoticed] = useState<string | null>(null);
-
-  const handleStart = () => {
-    setStep("problem");
-  };
-
-  const handleSubmitProblem = () => {
-    if (problem.length > 10) {
-      setStep("chat");
-      // Add initial AI message
-      setChatMessages([
-        {
-          role: "assistant",
-          content: `That sounds frustrating: "${problem.slice(0, 100)}${problem.length > 100 ? "..." : ""}"\n\nLet's work on this together. What's your first thought on how to approach it?`,
-        },
-      ]);
-    }
-  };
-
-  const handleChatComplete = () => {
-    setStep("reflection");
-  };
-
-  const handleComplete = () => {
-    // Record the onboarding as an interaction
-    recordInteraction(
-      chatMessages.length > 3 ? "pushed_further" : "gave_up_early",
-      "Onboarding session"
-    );
-    setStep("complete");
-  };
-
-  const patterns = [
-    {
-      id: "short",
-      label: "Quick exchanges",
-      description: "You kept messages brief. Sometimes that works, but more detail often helps AI understand context.",
-    },
-    {
-      id: "questions",
-      label: "Asking questions",
-      description: "You asked clarifying questions. This is a great habit for avoiding misunderstandings.",
-    },
-    {
-      id: "accepting",
-      label: "Accepting responses",
-      description: "You went with AI's suggestions. That's fine for exploration, but verification builds judgment.",
-    },
-  ];
-
-  if (step === "intro") {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-8">
-            <Brain className="w-10 h-10 text-primary" />
-          </div>
-          <h1 className="text-5xl font-bold mb-6">TANDEM</h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Practice working with AI through real problems.
-            <br />
-            <span className="text-primary">No lectures. No exams. Just experience.</span>
-          </p>
-
-          <Card className="mb-8">
-            <CardContent className="pt-6">
-              <p className="text-sm text-muted-foreground mb-4">
-                This platform is different. You won't watch videos or take quizzes.
-                You'll work on actual problems alongside an AI partner.
-              </p>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-500" />
-                  <span>6 practice classes</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MessageCircle className="w-4 h-4 text-blue-500" />
-                  <span>AI personalities</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-emerald-500" />
-                  <span>Pattern recognition</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-purple-500" />
-                  <span>Skill tokens</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Button size="lg" onClick={handleStart}>
-            Start 15-Minute Intro
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+  
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#0A0A0F]">
+      {/* Animated Background Grid */}
+      <div className="absolute inset-0 opacity-20">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+            transform: `perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px)`,
+            transformOrigin: 'center top',
+          }}
+        />
       </div>
-    );
-  }
-
-  if (step === "problem") {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-xl mx-auto">
-          <Badge className="mb-4">Step 1 of 5</Badge>
-          <h2 className="text-3xl font-bold mb-4">What's annoying you at work right now?</h2>
-          <p className="text-muted-foreground mb-8">
-            Don't overthink it. Just describe something that's slightly frustrating—a task, 
-            a decision, a communication issue. This is your real problem to work with.
-          </p>
-
-          <Textarea
-            value={problem}
-            onChange={(e) => setProblem(e.target.value)}
-            placeholder="I need to... but..."
-            rows={4}
-            className="mb-4"
+      
+      {/* Floating Particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 rounded-full"
+            style={{
+              background: i % 2 === 0 ? '#00F0FF' : '#FF006E',
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.8, 0.2],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
           />
-
-          <Button 
-            onClick={handleSubmitProblem} 
-            disabled={problem.length < 10}
-            className="w-full"
-          >
-            Let's work on this →
-          </Button>
-
-          {problem.length < 10 && problem.length > 0 && (
-            <p className="text-sm text-muted-foreground text-center mt-2">
-              Share a bit more detail to continue
-            </p>
-          )}
-        </div>
+        ))}
       </div>
-    );
-  }
-
-  if (step === "chat") {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <Badge className="mb-4">Step 2-3 of 5</Badge>
-          <h2 className="text-2xl font-bold mb-2">Work with AI on your problem</h2>
-          <p className="text-muted-foreground mb-6">
-            Try to solve your problem. AI will respond—but notice when it helps, 
-            when it's frustrating, when you feel stuck. That's the practice.
-          </p>
-
-          <div className="h-[500px] mb-6">
-            <AIChat
-              initialMessages={chatMessages.map((m, i) => ({
-                id: i.toString(),
-                role: m.role,
-                content: m.content,
-                timestamp: new Date().toISOString(),
-              }))}
-              onMessageSend={(content) => {
-                setChatMessages([...chatMessages, { role: "user", content }]);
+      
+      {/* Mouse-following glow */}
+      <div 
+        className="fixed pointer-events-none z-0 w-[600px] h-[600px] rounded-full opacity-20 blur-3xl"
+        style={{
+          background: 'radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, transparent 70%)',
+          left: mousePos.x - 300,
+          top: mousePos.y - 300,
+          transition: 'left 0.3s ease-out, top 0.3s ease-out',
+        }}
+      />
+      
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+        
+        {/* Logo Animation */}
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 1, type: 'spring', bounce: 0.4 }}
+          className="mb-8"
+        >
+          <div className="relative">
+            {/* Outer ring */}
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                border: '2px solid transparent',
+                background: 'linear-gradient(#0A0A0F, #0A0A0F) padding-box, linear-gradient(135deg, #00F0FF, #FF006E) border-box',
               }}
-              onMessageReceive={(content) => {
-                setChatMessages([...chatMessages, { role: "assistant", content }]);
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+            />
+            
+            {/* Inner content */}
+            <div 
+              className="relative w-32 h-32 rounded-full flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))',
+                boxShadow: '0 0 40px rgba(0, 240, 255, 0.3), inset 0 0 40px rgba(255, 0, 110, 0.1)',
               }}
-            />
+            >
+              <span 
+                className="text-5xl font-bold"
+                style={{
+                  background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 0 30px rgba(0, 240, 255, 0.5)',
+                }}
+              >
+                T
+              </span>
+            </div>
           </div>
-
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-muted-foreground">
-              {chatMessages.filter(m => m.role === "user").length} messages exchanged
-            </p>
-            <Button onClick={handleChatComplete} variant="outline">
-              I've hit some friction →
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (step === "reflection") {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <Badge className="mb-4">Step 4 of 5</Badge>
-          <h2 className="text-3xl font-bold mb-4">The Mirror</h2>
-          <p className="text-muted-foreground mb-8">
-            Here's what we noticed about how you worked with AI. 
-            Different people have different instincts—there's no "right" way.
-          </p>
-
-          <Card className="mb-6">
-            <CardContent className="pt-6">
-              <h3 className="font-semibold mb-4">Select what resonates:</h3>
-              <div className="space-y-3">
-                {patterns.map((pattern) => (
-                  <button
-                    key={pattern.id}
-                    onClick={() => setPatternNoticed(pattern.id)}
-                    className={`w-full text-left p-4 rounded-lg border transition-colors ${
-                      patternNoticed === pattern.id
-                        ? "border-primary bg-primary/5"
-                        : "hover:bg-muted"
-                    }`}
-                  >
-                    <div className="font-medium mb-1">{pattern.label}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {pattern.description}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="mb-6">
-            <label className="font-medium mb-2 block">
-              What did you notice about your interaction?
-            </label>
-            <Textarea
-              value={reflection}
-              onChange={(e) => setReflection(e.target.value)}
-              placeholder="I noticed that I..."
-              rows={3}
-            />
-          </div>
-
-          <Button 
-            onClick={handleComplete} 
-            disabled={!patternNoticed || reflection.length < 20}
-            className="w-full"
+        </motion.div>
+        
+        {/* Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-7xl md:text-9xl font-bold mb-4 text-center"
+        >
+          <span className="text-white">TAN</span>
+          <span 
+            className="text-transparent bg-clip-text"
+            style={{ backgroundImage: 'linear-gradient(135deg, #00F0FF, #B829DD, #FF006E)' }}
           >
-            Continue →
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (step === "complete") {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-xl mx-auto text-center">
-          <Badge className="mb-4">Step 5 of 5</Badge>
-          <h2 className="text-3xl font-bold mb-4">That was the platform.</h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            You just experienced how TANDEM works: bring a problem, work with AI, 
-            notice your patterns, try again with insight.
-          </p>
-
-          <Card className="mb-8">
-            <CardContent className="pt-6">
-              <h3 className="font-semibold mb-4">What you can do now:</h3>
-              <div className="space-y-3 text-left">
-                <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="mt-0.5">1</Badge>
-                  <div>
-                    <p className="font-medium">Explore 6 practice classes</p>
-                    <p className="text-sm text-muted-foreground">
-                      Each focuses on a different way of working with AI
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="mt-0.5">2</Badge>
-                  <div>
-                    <p className="font-medium">Try different AI personalities</p>
-                    <p className="text-sm text-muted-foreground">
-                      The Skeptic, The Optimist, The Literalist, The Connector
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="mt-0.5">3</Badge>
-                  <div>
-                    <p className="font-medium">Build your skill collection</p>
-                    <p className="text-sm text-muted-foreground">
-                      Earn tokens that reflect your emerging style
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Link href="/classes">
-            <Button size="lg">
-              Explore Classes
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            DEM
+          </span>
+        </motion.h1>
+        
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="text-xl md:text-2xl text-center mb-4 max-w-2xl"
+          style={{ color: '#8B8B9E' }}
+        >
+          The Collaboration Dojo
+        </motion.p>
+        
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="text-lg text-center mb-12 max-w-xl"
+          style={{ color: '#6B6B7E' }}
+        >
+          Practice working with AI through real problems.
+          <br />
+          <span style={{ color: '#00F0FF' }}>Human creativity</span> + 
+          <span style={{ color: '#FF006E' }}> AI intelligence</span> = 
+          <span style={{ color: '#B829DD' }}> Fusion</span>
+        </motion.p>
+        
+        {/* Neural Connection Visual */}
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ delay: 0.8, duration: 1 }}
+          className="w-full max-w-md mb-12"
+        >
+          <NeuralConnector intensity="high" state="pulsing" />
+        </motion.div>
+        
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+        >
+          <Link href="/onboarding">
+            <motion.button
+              className="relative px-12 py-5 rounded-full text-lg font-bold uppercase tracking-widest overflow-hidden group"
+              style={{
+                background: 'linear-gradient(135deg, #00F0FF 0%, #B829DD 50%, #FF006E 100%)',
+                boxShadow: '0 0 40px rgba(0, 240, 255, 0.4)',
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {/* Button glow effect */}
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{
+                  background: 'linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent)',
+                }}
+              />
+              <span className="relative text-white">Enter The Dojo</span>
+            </motion.button>
           </Link>
-        </div>
+        </motion.div>
+        
+        {/* Feature Preview Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="flex flex-wrap justify-center gap-6 mt-20"
+        >
+          <div 
+            className="p-6 rounded-xl border text-center max-w-xs"
+            style={{
+              background: 'rgba(0, 240, 255, 0.05)',
+              borderColor: 'rgba(0, 240, 255, 0.2)',
+            }}
+          >
+            <div 
+              className="text-3xl mb-2"
+              style={{ textShadow: '0 0 20px rgba(0, 240, 255, 0.5)' }}
+            >
+              6
+            </div>
+            <div className="text-sm text-gray-400">Practice Classes</div>
+          </div>
+          
+          <div 
+            className="p-6 rounded-xl border text-center max-w-xs"
+            style={{
+              background: 'rgba(255, 0, 110, 0.05)',
+              borderColor: 'rgba(255, 0, 110, 0.2)',
+            }}
+          >
+            <div 
+              className="text-3xl mb-2"
+              style={{ textShadow: '0 0 20px rgba(255, 0, 110, 0.5)' }}
+            >
+              4
+            </div>
+            <div className="text-sm text-gray-400">AI Personalities</div>
+          </div>
+          
+          <div 
+            className="p-6 rounded-xl border text-center max-w-xs"
+            style={{
+              background: 'rgba(184, 41, 221, 0.05)',
+              borderColor: 'rgba(184, 41, 221, 0.2)',
+            }}
+          >
+            <div 
+              className="text-3xl mb-2"
+              style={{ textShadow: '0 0 20px rgba(184, 41, 221, 0.5)' }}
+            >
+              ∞
+            </div>
+            <div className="text-sm text-gray-400">Skill Tokens</div>
+          </div>
+        </motion.div>
+        
+        {/* Sample Holographic Card Preview */}
+        <motion.div
+          initial={{ opacity: 0, rotateY: -90 }}
+          animate={{ opacity: 1, rotateY: 0 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="mt-16"
+        >
+          <p className="text-center text-gray-500 mb-4 text-sm uppercase tracking-widest">
+            Preview Your Future Artifacts
+          </p>
+          <HolographicCard
+            name="Precision Intent"
+            description="You practiced being specific about what you want"
+            rarity="rare"
+            icon="✦"
+          />
+        </motion.div>
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 }

@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "./layout/Navigation";
 import { UserProvider } from "./lib/hooks/useUser";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: '--font-inter',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: '--font-space-grotesk',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: '--font-jetbrains',
+});
 
 export const metadata: Metadata = {
-  title: "TANDEM - Practice AI Collaboration",
-  description: "A practice-based platform for learning to work with AI. No lectures, no exams—just real problems and reflective practice.",
+  title: "TANDEM - The Collaboration Dojo",
+  description: "Practice working with AI through real problems. Human creativity + AI intelligence = Fusion.",
 };
 
 export default function RootLayout({
@@ -17,11 +30,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <UserProvider>
           <Navigation />
-          <main className="min-h-screen">
+          <main>
             {children}
           </main>
         </UserProvider>
