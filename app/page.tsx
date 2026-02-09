@@ -21,9 +21,9 @@ export default function Home() {
   }, []);
   
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0A0A0F]">
+    <div className="relative min-h-screen overflow-hidden bg-[#0A0A0F] w-full">
       {/* Animated Background Grid */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div 
           className="absolute inset-0"
           style={{
@@ -74,7 +74,7 @@ export default function Home() {
       />
       
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen w-full">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen w-full text-center">
         
         {/* Logo Animation */}
         <motion.div

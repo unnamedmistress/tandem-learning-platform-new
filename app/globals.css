@@ -56,6 +56,12 @@
     overflow-x: hidden;
   }
   
+  /* Center all direct children of body */
+  body > * {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
   /* Force center alignment on all content */
   #__next {
     width: 100%;
@@ -207,10 +213,11 @@
 .centered-container {
   width: 100%;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
   padding-left: 1rem;
   padding-right: 1rem;
+  text-align: center;
 }
 
 @media (min-width: 640px) {
