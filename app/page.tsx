@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-900 via-black to-black text-white">
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center h-screen px-4">
+      <section className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

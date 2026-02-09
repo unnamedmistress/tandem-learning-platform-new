@@ -47,28 +47,8 @@ export default function RootLayout({
       >
         <UserProvider>
           <Navigation />
-          <main 
-            style={{
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              paddingTop: '80px', // Add padding for fixed navigation
-            }}
-          >
-            <div 
-              style={{
-                width: '100%',
-                maxWidth: '1280px',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                paddingLeft: '1rem',
-                paddingRight: '1rem',
-                boxSizing: 'border-box',
-              }}
-            >
-              {children}
-            </div>
+          <main className="w-full">
+            {children}
           </main>
           <PrivacyFooter />
         </UserProvider>
