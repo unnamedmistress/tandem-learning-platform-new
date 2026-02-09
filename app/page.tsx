@@ -8,7 +8,7 @@ export default function Home() {
   const [showPersonalityShowcase, setShowPersonalityShowcase] = useState(false);
   
   return (
-    <main className="min-h-screen bg-gradient-to-b from-purple-900 via-black to-black text-white text-center">
+    <main className="min-h-screen bg-gradient-to-b from-purple-900 via-black to-black text-white" style={{ textAlign: 'center' }}>
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
         <motion.div
