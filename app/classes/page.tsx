@@ -56,10 +56,8 @@ function CelestialOrb({
   const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
   const isComplete = progress === 100;
   
-  // Calculate orbital position for staggered layout
-  const row = Math.floor(index / 3);
-  const col = index % 3;
-  const offsetY = row % 2 === 1 ? 50 : 0; // Stagger odd rows
+  // Staggered layout offset - simplified for responsive
+  const offsetY = 0; // Removed stagger for cleaner mobile layout
   
   return (
     <motion.div
@@ -100,9 +98,9 @@ function CelestialOrb({
             transition={{ duration: 15 + index * 3, repeat: Infinity, ease: 'linear' }}
           />
           
-          {/* Main planet body */}
+          {/* Main planet body - Larger on mobile for touch targets */}
           <motion.div
-            className="relative w-48 h-48 mx-auto rounded-full overflow-hidden"
+            className="relative w-32 h-32 sm:w-40 sm:w-48 mx-auto rounded-full overflow-hidden touch-manipulation"
             style={{
               background: `radial-gradient(circle at 30% 30%, ${colors.secondary}40, ${colors.primary}20, transparent)`,
               boxShadow: isHovered 
@@ -110,7 +108,8 @@ function CelestialOrb({
                 : `0 0 30px ${colors.glow}, inset 0 0 20px ${colors.primary}20`,
               border: `2px solid ${colors.primary}50`,
             }}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
             {/* Planet surface texture */}
@@ -315,7 +314,7 @@ export default function ClassesPage() {
           </div>
           
           <h1 
-            className="text-5xl md:text-6xl font-bold mb-6"
+            className="text-3xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 px-4"
             style={{
               background: 'linear-gradient(135deg, #00F0FF, #B829DD, #FF006E)',
               WebkitBackgroundClip: 'text',
@@ -325,10 +324,10 @@ export default function ClassesPage() {
             Choose Your Path
           </h1>
           
-          <p className="text-lg max-w-2xl mx-auto mb-8" style={{ color: '#6B6B7E' }}>
+          <p className="text-base sm:text-lg max-w-2xl mx-auto mb-6 sm:mb-8 px-4" style={{ color: '#6B6B7E' }}>
             Each celestial body represents a different way of working with AI.
-            <br />
-            <span style={{ color: '#8B8B9E' }}>Hover to explore. Click to enter.</span>
+            <br className="hidden sm:block" />
+            <span style={{ color: '#8B8B9E' }}>Tap to explore.</span>
           </p>
           
           {/* Search */}
@@ -370,8 +369,8 @@ export default function ClassesPage() {
           </motion.div>
         </motion.div>
         
-        {/* Celestial Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
+        {/* Celestial Grid - 2 columns on mobile, 3 on desktop */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto px-4">
           {filteredClasses.length > 0 ? (
             filteredClasses.map((classData, index) => {
               const completedLessons = classData.lessons.filter(lesson => 
