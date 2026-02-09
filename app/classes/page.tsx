@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { classes } from "../lib/data/classes";
-import { Brain, Sparkles, ArrowRight, Search, CheckCircle } from 'lucide-react';
+import { Brain, Sparkles, ArrowRight, Search, CheckCircle, Play } from 'lucide-react';
 import { useUser } from "../lib/hooks/useUser";
+import { PathSelector } from "../components/PathSelector";
+import { LessonPreviewModal } from "../components/LessonPreviewModal";
 
 const colorMap: Record<string, { primary: string; secondary: string; glow: string }> = {
   violet: { 
@@ -247,6 +249,7 @@ function CelestialOrb({
 export default function ClassesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const { user } = useUser();
   
   // Filter classes based on search
@@ -369,6 +372,30 @@ export default function ClassesPage() {
           </motion.div>
         </motion.div>
         
+        {/* Path Selector */}
+        <PathSelector currentPath="classes" />
+        
+        {/* Preview Button */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-center mb-8"
+        >
+          <button
+            onClick={() => setShowPreview(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm"
+            style={{
+              background: 'rgba(0, 240, 255, 0.1)',
+              border: '1px solid rgba(0, 240, 255, 0.3)',
+              color: '#00F0FF',
+            }}
+          >
+            <Play className="w-4 h-4" />
+            See how lessons work
+          </button>
+        </motion.div>
+        
         {/* Celestial Grid - 2 columns on mobile, 3 on desktop */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto px-4">
           {filteredClasses.length > 0 ? (
@@ -423,6 +450,12 @@ export default function ClassesPage() {
             </p>
           </div>
         </motion.div>
+        
+        {/* Lesson Preview Modal */}
+        <LessonPreviewModal 
+          isOpen={showPreview} 
+          onClose={() => setShowPreview(false)} 
+        />
       </div>
     </div>
   );
