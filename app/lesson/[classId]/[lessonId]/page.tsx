@@ -4,10 +4,10 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { PracticeArc } from "../../components/PracticeArc";
-import { classes } from "../../lib/data/classes";
-import { useUser } from "../../lib/hooks/useUser";
-import { DepthLevel } from "../../lib/types";
+import { PracticeArc } from "../../../components/PracticeArc";
+import { classes } from "../../../lib/data/classes";
+import { useUser } from "../../../lib/hooks/useUser";
+import { DepthLevel } from "../../../lib/types";
 
 export default function LessonPage() {
   const params = useParams();

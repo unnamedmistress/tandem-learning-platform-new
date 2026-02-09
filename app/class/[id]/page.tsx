@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Brain } from "lucide-react";
-import { LessonCard } from "../components/LessonCard";
-import { classes } from "../lib/data/classes";
+import { LessonCard } from "../../components/LessonCard";
+import { classes } from "../../lib/data/classes";
 import { cn } from "@/lib/utils";
 
 export default function ClassPage() {

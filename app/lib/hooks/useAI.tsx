@@ -1,17 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { aiPersonalities } from '../data/aiPersonalities';
-import { aiResponses } from '../data/aiResponses';
+"use client";
 
-export const useAI = () => {
-  const [personality, setPersonality] = useState(aiPersonalities[0]);
-  const [response, setResponse] = useState('');
+import { useState, useCallback } from "react";
+import { aiPersonalities, AIPersonality } from "../data/aiPersonalities";
+import { generateAIResponse } from "../data/aiResponses";
 
-  useEffect(() => {
-    if (personality) {
-      const personalityResponse = aiResponses[personality.id];
-      setResponse(personalityResponse || '');
-    }
-  }, [personality]);
+export function useAI() {
+  const [personality, setPersonality] = useState<AIPersonality["id"]>("optimist");
+  const [isLoading, setIsLoading] = useState(false);
 
-  return { personality, setPersonality, response };
-};
+  const getResponse = useCallback(
+    async (userMessage: string, phase: "a" | "b" | "c" | "d" = "a") => {
+      setIsLoading(true);
+      
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 500 + Math.random() * 1000));
+      
+      const personalityData = aiPersonalities.find((p) => p.id === personality);
+      if (!personalityData) {
+        setIsLoading(false);
+        return "I'm not sure how to respond right now.";
+      }
+      
+      const response = generateAIResponse(userMessage, personalityData, phase);
+      setIsLoading(false);
+      return response;
+    },
+    [personality]
+  );
+
+  return {
+    personality,
+    setPersonality,
+    getResponse,
+    isLoading,
+    personalityData: aiPersonalities.find((p) => p.id === personality),
+  };
+}
