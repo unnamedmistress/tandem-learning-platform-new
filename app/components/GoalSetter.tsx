@@ -44,25 +44,24 @@ const goals: GoalOption[] = [
 ];
 
 interface GoalSetterProps {
-  onComplete: (goalId: string, goalTitle: string) => void;
+  onComplete: (goalIds: string[]) => void;
   onSkip?: () => void;
-  onBack?: () => void;
 }
 
-export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
-  const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
-
+export function GoalSetter({ onComplete, onSkip }: GoalSetterProps) {
+  const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
+  
   const handleSelect = (goalId: string) => {
-    setSelectedGoal(goalId);
-    setIsAnimating(true);
-    
-    const goal = goals.find(g => g.id === goalId);
-    if (goal) {
-      setTimeout(() => {
-        onComplete(goalId, goal.title);
-      }, 600);
-    }
+    setSelectedGoals((prev) => {
+      if (prev.includes(goalId)) {
+        return prev.filter((id) => id !== goalId);
+      }
+      return [...prev, goalId];
+    });
+  };
+
+  const handleComplete = () => {
+    if (selectedGoals.length) onComplete(selectedGoals);
   };
 
   return (
@@ -76,10 +75,10 @@ export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
           Welcome to Your AI Training Dojo
         </h2>
         <p className="text-lg text-slate-400">
-          What's your #1 goal right now?
+          Select all that apply to your goals
         </p>
         <p className="text-sm text-slate-500 mt-2">
-          We'll personalize your experience based on this
+          Personalize your experience based on these goals
         </p>
       </motion.div>
 
@@ -93,21 +92,19 @@ export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
             whileHover={{ scale: 1.02, x: 8 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleSelect(goal.id)}
-            disabled={isAnimating}
             className={`
               relative w-full p-6 rounded-xl text-left transition-all duration-300
               border-2 flex items-center gap-4
-              ${selectedGoal === goal.id 
+              ${selectedGoals.includes(goal.id) 
                 ? "border-cyan-500 bg-cyan-500/10 shadow-[0_0_30px_rgba(0,240,255,0.2)]" 
                 : "border-slate-700 bg-slate-800/50 hover:border-slate-500 hover:bg-slate-800"
               }
-              ${isAnimating && selectedGoal !== goal.id ? "opacity-50" : ""}
             `}
           >
             {/* Icon */}
             <div className={`
               w-12 h-12 rounded-xl flex items-center justify-center transition-colors
-              ${selectedGoal === goal.id 
+              ${selectedGoals.includes(goal.id) 
                 ? "bg-cyan-500 text-white" 
                 : "bg-slate-700 text-slate-400"
               }
@@ -119,7 +116,7 @@ export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
             <div className="flex-1">
               <h3 className={`
                 font-semibold text-lg transition-colors
-                ${selectedGoal === goal.id ? "text-white" : "text-slate-200"}
+                ${selectedGoals.includes(goal.id) ? "text-white" : "text-slate-200"}
               `}>
                 {goal.title}
               </h3>
@@ -130,7 +127,7 @@ export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
 
             {/* Selection indicator */}
             <AnimatePresence>
-              {selectedGoal === goal.id && (
+              {selectedGoals.includes(goal.id) && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -141,18 +138,22 @@ export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
                 </motion.div>
               )}
             </AnimatePresence>
-
-            {/* Recommended badge */}
-            {selectedGoal !== goal.id && (
-              <span className="text-xs text-slate-500 bg-slate-900/50 px-2 py-1 rounded-full">
-                {goal.recommendedPath === "classes" ? "📚 Classes" : "🎯 Challenges"}
-              </span>
-            )}
           </motion.button>
         ))}
       </div>
 
-      {/* Skip option */}
+      {/* Complete Selection */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        onClick={handleComplete}
+        disabled={!selectedGoals.length}
+        className="mt-6 px-8 py-3 rounded-lg font-bold uppercase tracking-wider text-sm text-white bg-cyan-500 hover:bg-cyan-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed mx-auto block"
+      >
+        Proceed →
+      </motion.button>
+
       {onSkip && (
         <motion.button
           initial={{ opacity: 0 }}
