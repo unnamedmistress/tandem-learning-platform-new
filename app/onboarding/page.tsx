@@ -19,7 +19,7 @@ export default function OnboardingPage() {
   const currentStepIndex = steps.indexOf(step);
 
   const handleGoalsSubmit = (goalIds: string[]) => {
-    setUserGoals([goalTitle]);
+    setUserGoals(goalIds);
     setStep('personality');
   };
 
