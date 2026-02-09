@@ -46,9 +46,10 @@ const goals: GoalOption[] = [
 interface GoalSetterProps {
   onComplete: (goalIds: string[]) => void;
   onSkip?: () => void;
+  onBack?: () => void;
 }
 
-export function GoalSetter({ onComplete, onSkip }: GoalSetterProps) {
+export function GoalSetter({ onComplete, onSkip, onBack }: GoalSetterProps) {
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   
   const handleSelect = (goalId: string) => {
