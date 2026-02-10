@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Clock, Award, Target, MessageSquare, ChevronRight } from 'lucide-react';
-import { getMissionById } from '../lib/data/missions';
+import { getMissionById } from '../../lib/data/missions';
 
 const difficultyColors = {
   'Easy': 'bg-green-500/20 text-green-400 border-green-500/30',
