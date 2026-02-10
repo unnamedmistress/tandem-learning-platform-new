@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Target, Clock, Award, ArrowRight } from 'lucide-react';
 import { missions } from '../lib/data/missions';
 
-const difficultyColors = {
+const difficultyColors: Record<string, string> = {
   'Easy': 'bg-green-500/20 text-green-400 border-green-500/30',
   'Easy-Medium': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
   'Medium': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',

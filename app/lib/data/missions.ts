@@ -211,5 +211,5 @@ export const missions = [
   }
 ];
 
-export const getMissionById = (id) => missions.find(m => m.id === id);
+export const getMissionById = (id: number) => missions.find(m => m.id === id);
 export const getAllMissions = () => missions;

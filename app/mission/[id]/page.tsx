@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, Clock, Award, Target, MessageSquare, ChevronRight } from 'lucide-react';
 import { getMissionById } from '../../lib/data/missions';
 
-const difficultyColors = {
+const difficultyColors: Record<string, string> = {
   'Easy': 'bg-green-500/20 text-green-400 border-green-500/30',
   'Easy-Medium': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
   'Medium': 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
@@ -16,7 +16,8 @@ const difficultyColors = {
 
 export default function MissionPage() {
   const params = useParams();
-  const mission = getMissionById(Number(params.id));
+  const missionId = params?.id ? Number(params.id) : null;
+  const mission = missionId ? getMissionById(missionId) : null;
 
   if (!mission) {
     return (
@@ -26,7 +27,7 @@ export default function MissionPage() {
     );
   }
 
-  const phaseOrder = ['setup', 'attempt', 'feedback', 'retry'];
+  const phaseOrder: Array<'setup' | 'attempt' | 'feedback' | 'retry'> = ['setup', 'attempt', 'feedback', 'retry'];
 
   return (
     <div className="min-h-screen bg-black text-white">
