@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { classes } from "../lib/data/classes";
 import { useUser } from "../lib/hooks/useUser";
-import { Search, BookOpen, ArrowRight, GraduationCap, Smartphone, Lightbulb } from 'lucide-react';
+import { Search, BookOpen, ArrowRight, GraduationCap, Smartphone, Lightbulb, Code, Briefcase } from 'lucide-react';
 
 const colorMap: Record<string, string> = {
   violet: '#8B5CF6',
@@ -20,6 +20,8 @@ const iconMap: Record<string, React.ElementType> = {
   "📱": Smartphone,
   "🎓": GraduationCap,
   "💡": Lightbulb,
+  "💼": Briefcase,
+  "⚡": Code,
 };
 
 export default function ClassesPage() {
@@ -36,16 +38,15 @@ export default function ClassesPage() {
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <section className="pt-32 pb-16 px-4 relative overflow-hidden">
-        {/* Background decoration */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-cyan-500/5 to-transparent pointer-events-none" />
         
         <div className="max-w-6xl mx-auto relative">
           <motion.div
             className="flex items-center gap-3 mb-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            <div className="w-12 h-12 rounded-xl bg-cyan-400/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-cyan-400/20 flex items-center justify-center border border-cyan-400/30">
               <BookOpen className="w-6 h-6 text-cyan-400" />
             </div>
             <p className="text-cyan-400 text-sm uppercase tracking-[0.3em]">
@@ -54,18 +55,19 @@ export default function ClassesPage() {
           </motion.div>
           
           <motion.h1 
-            className="text-6xl md:text-8xl font-black mb-6"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
           >
-            CHOOSE YOUR
-            <span className="block bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              PATH
+            Choose Your
+            <span className="block text-gradient">
+              Path
             </span>
           </motion.h1>
           
           <motion.p 
-            className="text-xl text-gray-400 max-w-2xl mb-8"
+            className="text-lg sm:text-xl text-gray-400 max-w-2xl mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -86,14 +88,14 @@ export default function ClassesPage() {
               placeholder="Search classes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-full py-4 pl-14 pr-6 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none transition-colors"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-14 pr-6 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none transition-colors"
             />
           </motion.div>
         </div>
       </section>
 
       {/* Classes Grid */}
-      <section className="py-16 px-4">
+      <section className="py-8 px-4 pb-32">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredClasses.map((classData, index) => {
             const color = colorMap[classData.colorScheme.primary] || '#64748B';
@@ -109,12 +111,11 @@ export default function ClassesPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -8 }}
               >
                 <Link href={`/class/${classData.id}`}>
                   <div 
-                    className="group relative p-8 border border-white/10 rounded-2xl h-full flex flex-col hover:border-cyan-400/50 transition-all overflow-hidden"
-                    style={{ background: `linear-gradient(135deg, ${color}08, transparent)` }}
+                    className="group relative p-6 sm:p-8 glass rounded-3xl h-full flex flex-col hover:border-cyan-400/50 transition-all overflow-hidden"
                   >
                     {/* Hover glow effect */}
                     <div 
@@ -124,34 +125,43 @@ export default function ClassesPage() {
                     
                     {/* Content */}
                     <div className="relative z-10">
-                      {/* Icon */}
-                      <div 
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110"
-                        style={{ background: `${color}20`, border: `2px solid ${color}40` }}
-                      >
-                        <IconComponent className="w-7 h-7" style={{ color }} />
+                      {/* Header with icon and theme */}
+                      <div className="flex items-start justify-between mb-6">
+                        <div 
+                          className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
+                          style={{ background: `${color}20`, border: `2px solid ${color}40` }}
+                        >
+                          <IconComponent className="w-7 h-7" style={{ color }} />
+                        </div>
+                        <span 
+                          className="text-xs uppercase tracking-wider px-3 py-1 rounded-full"
+                          style={{ background: `${color}15`, color, border: `1px solid ${color}30` }}
+                        >
+                          {classData.theme}
+                        </span>
                       </div>
                       
                       {/* Title */}
-                      <h3 className="text-2xl font-bold mb-2 group-hover:text-white transition-colors" style={{ color }}>
+                      <h3 className="text-xl sm:text-2xl font-bold mb-3 group-hover:text-white transition-colors">
                         {classData.title}
                       </h3>
                       
-                      <p className="text-gray-400 mb-4">{classData.theme}</p>
-                      <p className="text-gray-500 text-sm mb-6 flex-grow">{classData.description}</p>
+                      <p className="text-gray-400 text-sm mb-6 flex-grow line-clamp-2">
+                        {classData.description}
+                      </p>
                       
                       {/* Progress */}
                       <div className="mt-auto">
-                        <div className="flex justify-between text-sm mb-2">
+                        <div className="flex justify-between items-center text-sm mb-3">
                           <span className="text-gray-400">{completedLessons}/{classData.lessons.length} lessons</span>
-                          <span className="flex items-center gap-1" style={{ color }}>
+                          <span className="flex items-center gap-1 font-medium" style={{ color }}>
                             {Math.round(progress)}%
                             <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                           </span>
                         </div>
                         <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
                           <motion.div
-                            className="h-full rounded-full"
+                            className="h-full rounded-full transition-all duration-500"
                             style={{ background: color }}
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
@@ -173,7 +183,7 @@ export default function ClassesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center">
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10">
               <Search className="w-10 h-10 text-gray-500" />
             </div>
             <p className="text-gray-400 text-lg">No classes found</p>

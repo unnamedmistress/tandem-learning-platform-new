@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { GoalSetter } from '../components/GoalSetter';
 import { OnboardingPersonalitySelector } from '../components/OnboardingPersonalitySelector';
 import { LearningLoopDemo } from '../components/LearningLoopDemo';
-import { Trophy, Sparkles } from 'lucide-react';
+import { Trophy, Sparkles, Target, ArrowRight, Flame } from 'lucide-react';
 
 type OnboardingStep = 'welcome' | 'how-it-works' | 'goals' | 'personality' | 'ready';
 
@@ -29,14 +29,11 @@ export default function OnboardingPage() {
   };
   
   return (
-    <div className="min-h-screen bg-[#0A0A0F] py-12 px-8">
+    <div className="min-h-screen bg-black text-white">
       {/* Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-[#181820] z-50">
+      <div className="fixed top-24 left-0 right-0 h-1 bg-white/10 z-40 mx-4 max-w-7xl xl:mx-auto rounded-full overflow-hidden">
         <motion.div
-          className="h-full"
-          style={{
-            background: 'linear-gradient(90deg, #00F0FF, #B829DD, #FF006E)',
-          }}
+          className="h-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500"
           initial={{ width: '0%' }}
           animate={{ width: `${((currentStepIndex + 1) / steps.length) * 100}%` }}
           transition={{ duration: 0.5 }}
@@ -44,11 +41,12 @@ export default function OnboardingPage() {
       </div>
 
       {/* Skip button */}
-      <div className="fixed top-4 right-4 z-40">
-        <Link href="/classes">
-          <button className="text-xs uppercase tracking-wider px-4 py-2 rounded-lg border border-slate-700 text-slate-500 hover:text-white hover:border-slate-500 transition-all">
-            Skip →
-          </button>
+      <div className="fixed top-28 right-8 z-40">
+        <Link 
+          href="/classes"
+          className="text-xs uppercase tracking-wider px-4 py-2 rounded-xl glass text-gray-400 hover:text-white hover:border-white/30 transition-all"
+        >
+          Skip →
         </Link>
       </div>
       
@@ -60,19 +58,21 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-[80vh] grid grid-cols-1 md:grid-cols-2 gap-8 items-center container mx-auto py-12 px-6"
+            className="min-h-[80vh] flex flex-col items-center justify-center px-4 pt-24"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mx-auto max-w-screen-lg">
+            <div className="max-w-2xl mx-auto text-center">
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="mb-8 text-left"
+                className="mb-8"
               >
-                <div className="text-6xl mb-6">🎯</div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-cyan-400 to-pink-500 flex items-center justify-center">
+                  <Flame className="w-12 h-12 text-white" />
+                </div>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 text-gradient">
                   Welcome to TANDEM
                 </h1>
-                <p className="text-xl text-slate-400">
+                <p className="text-lg sm:text-xl text-gray-400">
                   The Collaboration Dojo where you master working with AI
                 </p>
               </motion.div>
@@ -81,21 +81,19 @@ export default function OnboardingPage() {
                 initial={{ y: 40, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="space-y-4 mb-12"
+                className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12"
               >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-slate-500 justify-items-center">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🧠</span>
-                    <span>6 Practice Classes</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">✨</span>
-                    <span>4 AI Partners</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">🏆</span>
-                    <span>∞ Skill Tokens</span>
-                  </div>
+                <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
+                  <Target className="w-5 h-5 text-cyan-400" />
+                  <span className="text-gray-300">6 Practice Classes</span>
+                </div>
+                <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
+                  <Sparkles className="w-5 h-5 text-pink-400" />
+                  <span className="text-gray-300">4 AI Partners</span>
+                </div>
+                <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
+                  <Trophy className="w-5 h-5 text-purple-400" />
+                  <span className="text-gray-300">∞ Skill Tokens</span>
                 </div>
               </motion.div>
 
@@ -104,9 +102,10 @@ export default function OnboardingPage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4 }}
                 onClick={() => setStep('how-it-works')}
-                className="px-12 py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-cyan-500 to-pink-500 text-white hover:shadow-[0_0_40px_rgba(0,240,255,0.3)] transition-all"
+                className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg bg-gradient-to-r from-cyan-400 to-pink-500 text-white hover:opacity-90 transition-all hover:scale-105"
               >
-                See How It Works →
+                See How It Works
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.button>
             </div>
           </motion.div>
@@ -119,7 +118,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex items-center justify-center py-8"
+            className="min-h-[80vh] flex items-center justify-center py-8 px-4 pt-24"
           >
             <LearningLoopDemo 
               onComplete={() => setStep('goals')}
@@ -135,7 +134,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex items-center justify-center py-8"
+            className="min-h-[80vh] flex items-center justify-center py-8 px-4 pt-24"
           >
             <GoalSetter 
               onComplete={handleGoalsSubmit}
@@ -151,7 +150,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex flex-col md:flex-row items-center justify-evenly py-12 px-4"
+            className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 pt-24"
           >
             <OnboardingPersonalitySelector 
               onSelect={handlePersonalitySelect}
@@ -167,7 +166,7 @@ export default function OnboardingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex items-center justify-center"
+            className="min-h-[80vh] flex items-center justify-center px-4 pt-24"
           >
             <div className="text-center max-w-2xl">
               <motion.div
@@ -176,38 +175,22 @@ export default function OnboardingPage() {
                 transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
                 className="mb-8"
               >
-                <div className="inline-block">
-                  <div 
-                    className="w-64 h-80 rounded-2xl p-8 flex flex-col items-center justify-center border-2 border-transparent"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))',
-                      boxShadow: '0 0 60px rgba(0, 240, 255, 0.3), inset 0 0 60px rgba(255, 0, 110, 0.1)',
-                    }}
-                  >
+                <div className="w-32 h-40 mx-auto rounded-3xl p-1 bg-gradient-to-br from-cyan-400 to-pink-500">
+                  <div className="w-full h-full rounded-3xl bg-black flex flex-col items-center justify-center">
                     <motion.div
                       animate={{ 
                         rotateY: [0, 10, 0, -10, 0],
                         scale: [1, 1.1, 1],
                       }}
                       transition={{ duration: 3, repeat: Infinity }}
-                      className="text-7xl mb-4"
-                      style={{
-                        textShadow: '0 0 40px rgba(0, 240, 255, 0.8)',
-                      }}
+                      className="text-6xl mb-2"
                     >
                       ✦
                     </motion.div>
-                    <h3 
-                      className="text-xl font-bold mb-2"
-                      style={{
-                        background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                      }}
-                    >
+                    <h3 className="text-lg font-bold text-gradient">
                       You're Ready
                     </h3>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-gray-500">
                       Your training begins now
                     </p>
                   </div>
@@ -219,19 +202,19 @@ export default function OnboardingPage() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="bg-slate-800/50 rounded-xl p-6 mb-8 border border-slate-700"
+                className="glass rounded-2xl p-6 mb-8 text-left"
               >
-                <h3 className="text-lg font-semibold mb-4 text-white">Your Setup</h3>
+                <h3 className="text-lg font-semibold mb-4">Your Setup</h3>
                 
-                <div className="space-y-3 text-left grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3">
                   {userGoals.length > 0 && (
                     <div className="flex items-start gap-3">
-                      <Sparkles className="w-5 h-5 text-cyan-400 mt-0.5" />
+                      <Sparkles className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <span className="text-slate-400">Goals:</span>
+                        <span className="text-gray-400">Goals:</span>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {userGoals.map(goal => (
-                            <span key={goal} className="text-sm px-2 py-1 rounded bg-cyan-500/10 text-cyan-400">
+                            <span key={goal} className="text-xs px-2 py-1 rounded-lg bg-cyan-400/10 text-cyan-400 border border-cyan-400/30">
                               {goal === 'write-better-prompts' && 'Write Better Prompts'}
                               {goal === 'automate-work' && 'Automate Repetitive Work'}
                               {goal === 'learn-ai-fundamentals' && 'Learn AI Fundamentals'}
@@ -247,9 +230,9 @@ export default function OnboardingPage() {
                   
                   {selectedPersonality && (
                     <div className="flex items-center gap-3">
-                      <Trophy className="w-5 h-5 text-pink-400" />
+                      <Trophy className="w-5 h-5 text-pink-400 flex-shrink-0" />
                       <div>
-                        <span className="text-slate-400">AI Partner: </span>
+                        <span className="text-gray-400">AI Partner: </span>
                         <span className="text-white font-medium">{selectedPersonality.name}</span>
                       </div>
                     </div>
@@ -262,14 +245,14 @@ export default function OnboardingPage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
-                <Link href="/classes">
-                  <button
-                    className="px-12 py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-cyan-500 to-pink-500 text-white hover:shadow-[0_0_40px_rgba(0,240,255,0.3)] transition-all"
-                  >
-                    Enter the Dojo →
-                  </button>
+                <Link 
+                  href="/classes"
+                  className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg bg-gradient-to-r from-cyan-400 to-pink-500 text-white hover:opacity-90 transition-all hover:scale-105"
+                >
+                  Enter the Dojo
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <p className="text-slate-500 text-sm mt-4">
+                <p className="text-gray-500 text-sm mt-4">
                   You can change your goals and AI partner anytime
                 </p>
               </motion.div>

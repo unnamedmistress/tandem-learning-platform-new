@@ -2,8 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 5%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 180 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 60%;
+  --accent: 320 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
+  --ring: 180 100% 50%;
+  --radius: 1rem;
+}
+
 @layer base {
   * {
+    @apply border-border;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -14,14 +38,35 @@
   }
   
   body {
-    background: #000;
-    color: #fff;
+    @apply bg-black text-white antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
   ::selection {
     background: #00F0FF;
     color: #000;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500;
+  }
+  
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+  
+  .glow-cyan {
+    box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
+  }
+  
+  .glow-pink {
+    box-shadow: 0 0 40px rgba(255, 0, 110, 0.3);
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
   }
 }
 
@@ -41,4 +86,34 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Smooth animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
 }
