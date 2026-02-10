@@ -100,13 +100,13 @@ export default function ProfilePage() {
                   transition={{ delay: index * 0.05 }}
                   className="p-6 border border-white/10 rounded-2xl hover:border-cyan-400/50 transition-all group"
                 >
-                  <div className="text-3xl mb-4">{token.icon || '✦'}</div>
+                  <div className="text-3xl mb-4">✦</div>
                   <h3 className="text-xl font-bold mb-2 group-hover:text-cyan-400 transition-colors">
-                    {token.title}
+                    {token.name}
                   </h3>
                   <p className="text-gray-400 text-sm">{token.description}</p>
                   <div className="mt-4 text-xs uppercase tracking-wider text-gray-500">
-                    {token.rarity}
+                    {token.context}
                   </div>
                 </motion.div>
               ))}
