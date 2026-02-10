@@ -8,7 +8,7 @@ import { GraduationCap, Target, User, Flame } from "lucide-react";
 import { UserProvider } from "./lib/hooks/useUser";
 
 const navItems = [
-  { href: "/classes", label: "Classes", icon: GraduationCap },
+  { href: "/missions", label: "Missions", icon: GraduationCap },
   { href: "/challenges", label: "Challenges", icon: Target },
   { href: "/profile", label: "Profile", icon: User },
 ];
