@@ -26,15 +26,17 @@ export default function Home() {
             <span className="text-cyan-400">Human</span> + <span className="text-pink-500">AI</span> = <span className="text-purple-400">Fusion</span>
           </p>
           
-          <Link href="/onboarding">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 text-white font-bold uppercase tracking-wide shadow-lg hover:shadow-cyan-500/50 transition-shadow"
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link 
+              href="/onboarding"
+              className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 text-white font-bold uppercase tracking-wide shadow-lg hover:shadow-cyan-500/50 transition-all"
             >
               Enter The Dojo
-            </motion.button>
-          </Link>
+            </Link>
+          </motion.div>
         </motion.div>
       </section>
 
@@ -81,15 +83,17 @@ export default function Home() {
         <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
           Join thousands of learners practicing real-world AI problem-solving skills.
         </p>
-        <Link href="/onboarding">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 text-white font-bold uppercase tracking-wide shadow-lg"
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Link 
+            href="/onboarding"
+            className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 text-white font-bold uppercase tracking-wide shadow-lg hover:shadow-cyan-500/50 transition-all"
           >
             Start Learning Now
-          </motion.button>
-        </Link>
+          </Link>
+        </motion.div>
       </section>
 
       {/* Footer */}
