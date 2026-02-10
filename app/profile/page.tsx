@@ -31,15 +31,44 @@ export default function ProfilePage() {
   }, {} as Record<string, number>);
 
   return (
-    <div className=" py-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#0A0A0F] py-8 px-4">
+      {/* Background Effect */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+          }}
+        />
+      </div>
+      
+      <div className="relative z-10 max-w-4xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-            <Brain className="w-8 h-8 text-primary" />
+          <div 
+            className="w-16 h-16 rounded-full flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))',
+              border: '2px solid rgba(0, 240, 255, 0.3)',
+            }}
+          >
+            <Brain className="w-8 h-8" style={{ color: '#00F0FF' }} />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Your Learning Profile</h1>
-            <p className="text-muted-foreground">
+            <h1 
+              className="text-3xl font-bold"
+              style={{
+                background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Your Learning Profile
+            </h1>
+            <p style={{ color: '#6B6B7E' }}>
               Member since {new Date(user.joinedAt).toLocaleDateString()}
             </p>
           </div>
