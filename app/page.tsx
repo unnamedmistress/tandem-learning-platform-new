@@ -29,10 +29,22 @@ export default function Home() {
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            style={{ display: 'inline-block' }}
           >
             <Link 
               href="/onboarding"
-              className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 text-white font-bold uppercase tracking-wide shadow-lg hover:shadow-cyan-500/50 transition-all"
+              style={{
+                display: 'inline-block',
+                padding: '16px 32px',
+                borderRadius: '9999px',
+                background: 'linear-gradient(135deg, #06b6d4 0%, #ec4899 100%)',
+                color: 'white',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                boxShadow: '0 10px 15px -3px rgba(6, 182, 212, 0.3)',
+                textDecoration: 'none'
+              }}
             >
               Enter The Dojo
             </Link>
@@ -86,10 +98,22 @@ export default function Home() {
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          style={{ display: 'inline-block' }}
         >
           <Link 
             href="/onboarding"
-            className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-pink-500 text-white font-bold uppercase tracking-wide shadow-lg hover:shadow-cyan-500/50 transition-all"
+            style={{
+              display: 'inline-block',
+              padding: '16px 32px',
+              borderRadius: '9999px',
+              background: 'linear-gradient(135deg, #06b6d4 0%, #ec4899 100%)',
+              color: 'white',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              boxShadow: '0 10px 15px -3px rgba(6, 182, 212, 0.3)',
+              textDecoration: 'none'
+            }}
           >
             Start Learning Now
           </Link>
