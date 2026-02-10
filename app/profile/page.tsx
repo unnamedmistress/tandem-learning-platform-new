@@ -1,202 +1,142 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, Award, AlertCircle, BarChart3 } from "lucide-react";
-import { SkillToken } from "../components/SkillToken";
-import { UncertaintyLogger } from "../components/UncertaintyLogger";
-import { DepthMarkerLegend } from "../components/DepthMarker";
-import { useUser } from "../lib/hooks/useUser";
+import { motion } from 'framer-motion';
+import { Brain, Trophy, Target, Zap } from 'lucide-react';
+import { useUser } from '../lib/hooks/useUser';
 
 export default function ProfilePage() {
   const { user } = useUser();
 
   if (!user) {
     return (
-      <div className=" py-8">
-        <p>Loading profile...</p>
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-gray-400">Loading profile...</p>
       </div>
     );
   }
 
-  const completedCount = user.completedLessons.length;
-  const totalLessons = 24; // 6 classes × 4 lessons
+  const completedCount = user.completedLessons?.length || 0;
+  const totalLessons = 24;
   const progressPercent = Math.round((completedCount / totalLessons) * 100);
 
-  // Count depth markers
-  const depthCounts = Object.values(user.depthMarkers).reduce((acc, depth) => {
-    acc[depth] = (acc[depth] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const stats = [
+    { icon: Trophy, label: "Lessons", value: completedCount, color: "#F59E0B" },
+    { icon: Target, label: "Tokens", value: user.skillTokens?.length || 0, color: "#00F0FF" },
+    { icon: Zap, label: "Reflections", value: user.uncertaintyLog?.length || 0, color: "#FF006E" },
+    { icon: Brain, label: "Progress", value: `${progressPercent}%`, color: "#8B5CF6" },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] py-8 px-4">
-      {/* Background Effect */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-          }}
-        />
-      </div>
-      
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <div 
-            className="w-16 h-16 rounded-full flex items-center justify-center"
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 110, 0.1))',
-              border: '2px solid rgba(0, 240, 255, 0.3)',
-            }}
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <section className="pt-32 pb-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.p 
+            className="text-purple-400 text-sm uppercase tracking-[0.3em] mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            <Brain className="w-8 h-8" style={{ color: '#00F0FF' }} />
-          </div>
-          <div>
-            <h1 
-              className="text-3xl font-bold"
-              style={{
-                background: 'linear-gradient(135deg, #00F0FF, #FF006E)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
+            Your Journey
+          </motion.p>
+          
+          <motion.h1 
+            className="text-6xl md:text-8xl font-black mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            PROFILE
+          </motion.h1>
+          
+          <motion.p 
+            className="text-xl text-gray-400"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Member since {new Date(user.joinedAt).toLocaleDateString()}
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Stats Grid */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="p-8 border border-white/10 rounded-2xl text-center hover:border-cyan-400/50 transition-all"
+              style={{ background: `linear-gradient(135deg, ${stat.color}10, transparent)` }}
             >
-              Your Learning Profile
-            </h1>
-            <p style={{ color: '#6B6B7E' }}>
-              Member since {new Date(user.joinedAt).toLocaleDateString()}
-            </p>
+              <stat.icon className="w-8 h-8 mx-auto mb-4" style={{ color: stat.color }} />
+              <div className="text-4xl md:text-5xl font-black mb-2" style={{ color: stat.color }}>
+                {stat.value}
+              </div>
+              <div className="text-sm text-gray-400 uppercase tracking-wider">{stat.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Skill Tokens */}
+      <section className="py-16 px-4 border-t border-white/10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-black mb-8">SKILL TOKENS</h2>
+          
+          {user.skillTokens?.length === 0 ? (
+            <div className="p-12 border border-white/10 rounded-2xl text-center">
+              <p className="text-gray-400 mb-4">No tokens yet.</p>
+              <p className="text-gray-500">Complete lessons to earn collectible tokens!</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {user.skillTokens?.map((token, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="p-6 border border-white/10 rounded-2xl hover:border-cyan-400/50 transition-all group"
+                >
+                  <div className="text-3xl mb-4">{token.icon || '✦'}</div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-cyan-400 transition-colors">
+                    {token.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm">{token.description}</p>
+                  <div className="mt-4 text-xs uppercase tracking-wider text-gray-500">
+                    {token.rarity}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Progress Bar */}
+      <section className="py-16 px-4 border-t border-white/10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-black mb-8">OVERALL PROGRESS</h2>
+          <div className="p-8 border border-white/10 rounded-2xl">
+            <div className="flex justify-between items-end mb-4">
+              <div>
+                <div className="text-5xl font-black text-cyan-400">{progressPercent}%</div>
+                <div className="text-gray-400 mt-2">{completedCount} of {totalLessons} lessons completed</div>
+              </div>
+            </div>
+            <div className="w-full h-4 bg-white/10 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 1, delay: 0.5 }}
+              />
+            </div>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold">{completedCount}</div>
-              <div className="text-sm text-muted-foreground">Lessons Completed</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold">{user.skillTokens.length}</div>
-              <div className="text-sm text-muted-foreground">Skill Tokens</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold">{user.uncertaintyLog.length}</div>
-              <div className="text-sm text-muted-foreground">Reflections</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <div className="text-3xl font-bold">{progressPercent}%</div>
-              <div className="text-sm text-muted-foreground">Overall Progress</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Tabs defaultValue="tokens" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="tokens">
-              <Award className="w-4 h-4 mr-2" />
-              Skill Tokens
-            </TabsTrigger>
-            <TabsTrigger value="reflections">
-              <AlertCircle className="w-4 h-4 mr-2" />
-              Uncertainty Log
-            </TabsTrigger>
-            <TabsTrigger value="patterns">
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Patterns
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="tokens" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Skill Tokens</CardTitle>
-                <CardDescription>
-                  Collectible observations about how you work with AI
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {user.skillTokens.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
-                    Complete lessons to earn skill tokens that reflect your working style.
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {user.skillTokens.map((token) => (
-                      <SkillToken key={token.id} token={token} />
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="reflections">
-            <UncertaintyLogger entries={user.uncertaintyLog} />
-          </TabsContent>
-
-          <TabsContent value="patterns" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Interaction Patterns</CardTitle>
-                <CardDescription>
-                  How you tend to engage with AI based on your activity
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {user.interactionPatterns.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
-                    Complete some lessons to see patterns in how you work with AI.
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {user.interactionPatterns.map((pattern) => (
-                      <div
-                        key={pattern.type}
-                        className="flex items-center justify-between p-3 bg-muted rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium capitalize">
-                            {pattern.type.replace(/_/g, " ")}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {pattern.count} times
-                          </p>
-                        </div>
-                        <Badge variant="outline">{pattern.count}</Badge>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <DepthMarkerLegend />
-
-                <div className="pt-4 border-t">
-                  <h4 className="font-medium mb-2">Depth Distribution</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    {["surface", "structure", "judgment", "fluency"].map((depth) => (
-                      <div key={depth} className="text-center p-2 bg-muted rounded">
-                        <div className="font-semibold">{depthCounts[depth] || 0}</div>
-                        <div className="text-xs text-muted-foreground capitalize">{depth}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
+      </section>
     </div>
   );
 }
