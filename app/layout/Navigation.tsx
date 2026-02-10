@@ -13,10 +13,10 @@ export function Navigation() {
   
   const navItems = [
     { 
-      href: "/classes", 
-      label: "Classes", 
+      href: "/missions", 
+      label: "Missions", 
       icon: GraduationCap,
-      tooltip: "Browse AI practice classes by topic"
+      tooltip: "Structured AI practice missions"
     },
     { 
       href: "/challenges", 

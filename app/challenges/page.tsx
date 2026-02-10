@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Plus, Filter, Target, TrendingUp, MessageCircle } from "lucide-react";
 import { challenges as initialChallenges } from "../lib/data/challenges";
@@ -119,12 +120,12 @@ export default function ChallengesPage() {
       <section className="py-8 px-4 pb-32">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
           {filteredChallenges.map((challenge, index) => (
+            <Link key={challenge.id} href={`/challenge/${challenge.id}`}>
             <motion.div
-              key={challenge.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="group p-6 sm:p-8 glass rounded-3xl hover:border-pink-500/50 transition-all"
+              className="group p-6 sm:p-8 glass rounded-3xl hover:border-pink-500/50 transition-all cursor-pointer"
             >
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-4">
@@ -156,7 +157,11 @@ export default function ChallengesPage() {
                 </div>
                 
                 <button
-                  onClick={() => handleVote(challenge.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleVote(challenge.id);
+                  }}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-pink-500/10 text-pink-500 hover:bg-pink-500 hover:text-black transition-all font-medium"
                 >
                   <Plus className="w-4 h-4" />
@@ -164,6 +169,7 @@ export default function ChallengesPage() {
                 </button>
               </div>
             </motion.div>
+            </Link>
           ))}
         </div>
         
