@@ -2,31 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Plus, Filter, Sparkles } from "lucide-react";
-import { ChallengeCard } from "../components/ChallengeCard";
+import { Plus, Filter } from "lucide-react";
 import { challenges as initialChallenges } from "../lib/data/challenges";
 import { Challenge } from "../lib/types";
 
 export default function ChallengesPage() {
   const [challenges, setChallenges] = useState<Challenge[]>(initialChallenges);
   const [filter, setFilter] = useState<string | null>(null);
-  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
-
-  // New challenge form state
-  const [newTitle, setNewTitle] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newTags, setNewTags] = useState("");
 
   const allTags = Array.from(
     new Set(challenges.flatMap((c) => c.tags))
@@ -44,219 +26,119 @@ export default function ChallengesPage() {
     );
   };
 
-  const handleSubmit = () => {
-    if (!newTitle.trim() || !newDescription.trim()) return;
-
-    const newChallenge: Challenge = {
-      id: Date.now().toString(),
-      title: newTitle,
-      description: newDescription,
-      submittedBy: "anonymous",
-      votes: 1,
-      tags: newTags.split(",").map((t) => t.trim()).filter(Boolean) || ["workplace"],
-      status: "open",
-      submittedAt: new Date().toISOString(),
-    };
-
-    setChallenges([newChallenge, ...challenges]);
-    setNewTitle("");
-    setNewDescription("");
-    setNewTags("");
-    setIsSubmitOpen(false);
-  };
-
   return (
-    <div className="min-h-screen bg-[#0A0A0F] relative overflow-hidden">
-      {/* Subtle background */}
-      <div className="absolute inset-0 opacity-10">
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-          }}
-        />
-      </div>
-
-      <div className="relative z-10 py-8 px-4 max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-3xl mx-auto text-center mb-8"
-        >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Sparkles className="w-5 h-5" style={{ color: '#FF006E' }} />
-            <span 
-              className="text-sm uppercase tracking-widest font-mono"
-              style={{ color: '#8B8B9E' }}
-            >
-              Community Challenges
-            </span>
-            <Sparkles className="w-5 h-5" style={{ color: '#00F0FF' }} />
-          </div>
-          
-          <h1 
-            className="text-4xl sm:text-5xl font-bold mb-4"
-            style={{
-              background: 'linear-gradient(135deg, #00F0FF, #B829DD, #FF006E)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <section className="pt-32 pb-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.p 
+            className="text-pink-500 text-sm uppercase tracking-[0.3em] mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            Challenge Board
-          </h1>
-          <p className="text-base sm:text-lg" style={{ color: '#6B6B7E' }}>
-            Real problems from real people. Vote on what you&apos;d like to tackle, or share your own.
-          </p>
-        </motion.div>
+            Community
+          </motion.p>
+          
+          <motion.h1 
+            className="text-6xl md:text-8xl font-black mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            REAL WORLD
+            <span className="block bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+              CHALLENGES
+            </span>
+          </motion.h1>
+          
+          <motion.p 
+            className="text-xl text-gray-400 max-w-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Vote on scenarios. Submit your own. Learn from the community.
+          </motion.p>
+        </div>
+      </section>
 
-        {/* Filters and Submit Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-wrap items-center justify-between gap-4 mb-8 max-w-6xl mx-auto"
-        >
+      {/* Filter */}
+      <section className="px-4 pb-8">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2 text-gray-400">
+            <Filter className="w-4 h-4" />
+            <span className="text-sm uppercase tracking-wider">Filter:</span>
+          </div>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilter(null)}
-              className="px-4 py-2 rounded-full text-sm font-medium transition-all"
-              style={{
-                background: filter === null ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                border: filter === null ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
-                color: filter === null ? '#00F0FF' : '#8B8B9E',
-              }}
+              className={`px-4 py-2 rounded-full text-sm transition-all ${
+                filter === null 
+                  ? 'bg-white text-black' 
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10'
+              }`}
             >
-              <Filter className="w-4 h-4 inline mr-1" />
               All
             </button>
             {allTags.map((tag) => (
               <button
                 key={tag}
-                onClick={() => setFilter(tag === filter ? null : tag)}
-                className="px-4 py-2 rounded-full text-sm font-medium transition-all capitalize"
-                style={{
-                  background: filter === tag ? 'rgba(0, 240, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                  border: filter === tag ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
-                  color: filter === tag ? '#00F0FF' : '#8B8B9E',
-                }}
+                onClick={() => setFilter(tag)}
+                className={`px-4 py-2 rounded-full text-sm transition-all ${
+                  filter === tag 
+                    ? 'bg-cyan-400 text-black' 
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                }`}
               >
                 {tag}
               </button>
             ))}
           </div>
+        </div>
+      </section>
 
-          <Dialog open={isSubmitOpen} onOpenChange={setIsSubmitOpen}>
-            <DialogTrigger asChild>
-              <button
-                className="px-6 py-2 rounded-full text-sm font-medium transition-all hover:scale-105"
-                style={{
-                  background: 'linear-gradient(135deg, #00F0FF 0%, #B829DD 50%, #FF006E 100%)',
-                  color: 'white',
-                  boxShadow: '0 4px 20px rgba(0, 240, 255, 0.3)',
-                }}
-              >
-                <Plus className="w-4 h-4 inline mr-2" />
-                Share Challenge
-              </button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#0A0A0F] border-gray-800">
-              <DialogHeader>
-                <DialogTitle className="text-white">Share a Challenge</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 mt-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block text-gray-300">Title</label>
-                  <Input
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="What's the problem?"
-                    className="bg-gray-900 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block text-gray-300">Description</label>
-                  <Textarea
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                    placeholder="Describe the situation and what you've tried..."
-                    rows={4}
-                    className="bg-gray-900 border-gray-700 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block text-gray-300">Tags (comma separated)</label>
-                  <Input
-                    value={newTags}
-                    onChange={(e) => setNewTags(e.target.value)}
-                    placeholder="workplace, technical, creative"
-                    className="bg-gray-900 border-gray-700 text-white"
-                  />
-                </div>
-                <Button 
-                  onClick={handleSubmit} 
-                  className="w-full"
-                  style={{
-                    background: 'linear-gradient(135deg, #00F0FF 0%, #B829DD 50%, #FF006E 100%)',
-                  }}
-                >
-                  Submit Challenge
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </motion.div>
-
-        {/* Challenges Grid - 2 columns on tablet, 3 on desktop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-        >
+      {/* Challenges Grid */}
+      <section className="py-8 px-4 pb-32">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
           {filteredChallenges.map((challenge, index) => (
             <motion.div
               key={challenge.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + index * 0.05 }}
+              transition={{ delay: index * 0.05 }}
+              className="group p-8 border border-white/10 rounded-2xl hover:border-pink-500/50 transition-all"
             >
-              <ChallengeCard
-                challenge={challenge}
-                onVote={handleVote}
-              />
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex gap-2">
+                  {challenge.tags.map((tag) => (
+                    <span 
+                      key={tag} 
+                      className="text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 text-gray-400"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  onClick={() => handleVote(challenge.id)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-pink-500/10 text-pink-500 hover:bg-pink-500 hover:text-black transition-all"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span className="font-bold">{challenge.votes}</span>
+                </button>
+              </div>
+              
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-pink-500 transition-colors">
+                {challenge.title}
+              </h3>
+              <p className="text-gray-400 mb-4">{challenge.description}</p>
+              
+              <div className="text-sm text-gray-500">
+                Submitted by {challenge.submittedBy}
+              </div>
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* Empty State */}
-        {filteredChallenges.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-16"
-          >
-            <p className="text-gray-400 mb-4">
-              No challenges found with tag &quot;{filter}&quot;
-            </p>
-            <button
-              onClick={() => setFilter(null)}
-              className="px-6 py-2 rounded-full text-sm font-medium"
-              style={{
-                background: 'rgba(0, 240, 255, 0.1)',
-                border: '1px solid rgba(0, 240, 255, 0.3)',
-                color: '#00F0FF',
-              }}
-            >
-              Show All Challenges
-            </button>
-          </motion.div>
-        )}
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
