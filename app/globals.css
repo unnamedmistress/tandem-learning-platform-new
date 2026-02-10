@@ -1,6 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
+:root {
   --color-background: hsl(0 0% 0%);
   --color-foreground: hsl(0 0% 100%);
   --color-card: hsl(0 0% 5%);

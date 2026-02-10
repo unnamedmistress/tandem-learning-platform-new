@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Target } from "lucide-react";
 import { AIChat } from "./AIChat";
-import { Lesson, ChatMessage } from "../lib/types";
+import { Lesson, ChatMessage, AIPersonality } from "../lib/types";
 
 interface PhaseDProps {
   lesson: Lesson;
@@ -16,6 +16,7 @@ interface PhaseDProps {
   messages: ChatMessage[];
   onMessagesChange: (messages: ChatMessage[]) => void;
   onComplete: () => void;
+  personalityId?: AIPersonality;
 }
 
 export function PhaseD({
@@ -26,6 +27,7 @@ export function PhaseD({
   messages,
   onMessagesChange,
   onComplete,
+  personalityId = "optimist",
 }: PhaseDProps) {
   useEffect(() => {
     if (messages.length === 0) {
@@ -71,6 +73,7 @@ export function PhaseD({
               ]);
             }}
             phase="d"
+            personalityId={personalityId}
           />
         </div>
 

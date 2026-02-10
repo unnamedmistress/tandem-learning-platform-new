@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Circle, Play } from "lucide-react";
+import { CheckCircle2, Circle, Play, Clock } from "lucide-react";
 import { Lesson, DepthLevel } from "../lib/types";
 import { useUser } from "../lib/hooks/useUser";
+import { getLessonTimer, formatTimerEstimate } from "../lib/data/lessonTimers";
 import { cn } from "@/lib/utils";
 
 interface LessonCardProps {
@@ -26,6 +27,7 @@ export function LessonCard({ lesson, classId, index }: LessonCardProps) {
   const { user } = useUser();
   const isCompleted = user?.completedLessons.includes(lesson.id);
   const depth = user?.depthMarkers[lesson.id];
+  const timer = getLessonTimer(lesson.id);
 
   return (
     <Card className={cn(
@@ -43,8 +45,12 @@ export function LessonCard({ lesson, classId, index }: LessonCardProps) {
           </div>
           
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
               <span className="text-sm text-muted-foreground">Lesson {index + 1}</span>
+              <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {formatTimerEstimate(timer.minMinutes, timer.maxMinutes)}
+              </Badge>
               {depth && (
                 <Badge variant="outline" className={cn(
                   "text-xs capitalize",

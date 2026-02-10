@@ -1,30 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { AlertCircle, RotateCcw, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AIChat } from "./AIChat";
 import { PhaseA } from "./PhaseA";
 import { PhaseB } from "./PhaseB";
 import { PhaseC } from "./PhaseC";
 import { PhaseD } from "./PhaseD";
-import { Lesson, ChatMessage } from "../lib/types";
+import { MicroFeedbackCard } from "./MicroFeedbackCard";
+import { GoodFrictionGuide } from "./GoodFrictionGuide";
+import { Lesson, ChatMessage, LessonProgress, DepthLevel, MicroFeedback } from "../lib/types";
 import { useUser } from "../lib/hooks/useUser";
+import { generateMicroFeedback } from "../lib/data/microFeedback";
 
 interface PracticeArcProps {
   lesson: Lesson;
-  onComplete: (depth: "surface" | "structure" | "judgment" | "fluency") => void;
+  onComplete: (depth: DepthLevel) => void;
+  savedProgress?: LessonProgress | null;
+  onSaveProgress?: (
+    lessonId: string,
+    classId: string,
+    currentPhase: LessonProgress['currentPhase'],
+    chatHistory: ChatMessage[],
+    reflections: string[],
+    phaseAData?: { problem: string; context: string },
+    phaseCReflection?: string
+  ) => void;
 }
 
-export function PracticeArc({ lesson, onComplete }: PracticeArcProps) {
+export function PracticeArc({ lesson, onComplete, savedProgress, onSaveProgress }: PracticeArcProps) {
   const [currentPhase, setCurrentPhase] = useState<"a" | "b" | "c" | "d">("a");
   const [phaseAData, setPhaseAData] = useState<{ problem: string; context: string } | null>(null);
   const [phaseBMessages, setPhaseBMessages] = useState<ChatMessage[]>([]);
   const [phaseCReflection, setPhaseCReflection] = useState<string>("");
   const [phaseDMessages, setPhaseDMessages] = useState<ChatMessage[]>([]);
+  const [microFeedback, setMicroFeedback] = useState<MicroFeedback | null>(null);
+  const [showFrictionGuide, setShowFrictionGuide] = useState(true);
+  const [personalityId, setPersonalityId] = useState<'skeptic' | 'optimist' | 'literalist' | 'connector'>("optimist");
+  
   const { user, recordInteraction } = useUser();
 
   const phases = [
@@ -35,6 +53,67 @@ export function PracticeArc({ lesson, onComplete }: PracticeArcProps) {
   ];
 
   const currentPhaseIndex = phases.findIndex((p) => p.id === currentPhase);
+
+  // Restore progress on mount
+  useEffect(() => {
+    if (savedProgress) {
+      setCurrentPhase(savedProgress.currentPhase as "a" | "b" | "c" | "d");
+      if (savedProgress.phaseAData) {
+        setPhaseAData(savedProgress.phaseAData);
+      }
+      if (savedProgress.chatHistory.length > 0) {
+        const phaseBMsgs = savedProgress.chatHistory.filter(m => m.phase === 'b');
+        const phaseDMsgs = savedProgress.chatHistory.filter(m => m.phase === 'd');
+        setPhaseBMessages(phaseBMsgs);
+        setPhaseDMessages(phaseDMsgs);
+      }
+      if (savedProgress.phaseCReflection) {
+        setPhaseCReflection(savedProgress.phaseCReflection);
+      }
+    }
+  }, [savedProgress]);
+
+  // Auto-save progress on phase changes
+  useEffect(() => {
+    if (onSaveProgress) {
+      onSaveProgress(
+        lesson.id,
+        lesson.classId,
+        currentPhase,
+        [...phaseBMessages, ...phaseDMessages],
+        phaseCReflection ? [phaseCReflection] : [],
+        phaseAData || undefined,
+        phaseCReflection || undefined
+      );
+    }
+  }, [currentPhase, phaseBMessages, phaseDMessages, phaseCReflection, phaseAData]);
+
+  // Generate micro-feedback based on user interactions
+  useEffect(() => {
+    const userMessages = currentPhase === 'b' ? phaseBMessages : phaseDMessages;
+    const messageCount = userMessages.length;
+    
+    if (messageCount > 0 && messageCount % 3 === 0) { // Every 3 messages
+      const userMsgsOnly = userMessages.filter(m => m.role === 'user');
+      const avgLength = userMsgsOnly.length > 0
+        ? userMsgsOnly.reduce((acc, m) => acc + m.content.length, 0) / userMsgsOnly.length
+        : 0;
+      
+      const feedback = generateMicroFeedback({
+        messageCount,
+        avgMessageLength: avgLength,
+        hasAskedQuestion: userMsgsOnly.some(m => m.content.includes('?')),
+        hasPushedFurther: avgLength > 80,
+        phase: currentPhase,
+        lessonId: lesson.id,
+        reflectionLength: phaseCReflection?.length,
+      });
+      
+      if (feedback) {
+        setMicroFeedback(feedback);
+      }
+    }
+  }, [phaseBMessages, phaseDMessages, currentPhase, lesson.id, phaseCReflection]);
 
   const handlePhaseAComplete = (problem: string, context: string) => {
     setPhaseAData({ problem, context });
@@ -51,11 +130,10 @@ export function PracticeArc({ lesson, onComplete }: PracticeArcProps) {
   };
 
   const handlePhaseDComplete = () => {
-    // Determine depth level based on engagement
     const messageCount = phaseBMessages.length + phaseDMessages.length;
     const hasReflection = phaseCReflection.length > 50;
 
-    let depth: "surface" | "structure" | "judgment" | "fluency" = "surface";
+    let depth: DepthLevel = "surface";
     if (messageCount > 10 && hasReflection) depth = "fluency";
     else if (messageCount > 6 && hasReflection) depth = "judgment";
     else if (messageCount > 3) depth = "structure";
@@ -64,12 +142,15 @@ export function PracticeArc({ lesson, onComplete }: PracticeArcProps) {
   };
 
   const handleMessageSend = (message: string) => {
-    // Record interaction patterns
     if (message.length < 20) {
       recordInteraction("gave_up_early", "Short response: " + message.slice(0, 50));
     } else if (message.includes("?")) {
       recordInteraction("asked_clarifying", message.slice(0, 100));
     }
+  };
+
+  const handleDismissFeedback = () => {
+    setMicroFeedback(null);
   };
 
   return (
@@ -104,15 +185,46 @@ export function PracticeArc({ lesson, onComplete }: PracticeArcProps) {
         <Progress value={(currentPhaseIndex + 1) * 25} className="h-2" />
       </div>
 
+      {/* Micro Feedback */}
+      {microFeedback && (
+        <MicroFeedbackCard 
+          feedback={microFeedback} 
+          onDismiss={handleDismissFeedback}
+        />
+      )}
+
+      {/* Good Friction Guide (Phase B only) */}
+      {currentPhase === 'b' && showFrictionGuide && (
+        <GoodFrictionGuide 
+          lessonId={lesson.id}
+          onDismiss={() => setShowFrictionGuide(false)}
+        />
+      )}
+
       {/* Current Phase */}
       <Card>
         <CardContent className="pt-6">
-          <div className="mb-4">
-            <Badge variant="outline" className="mb-2">
-              Phase {currentPhase.toUpperCase()}: {phases[currentPhaseIndex].label}
-            </Badge>
-            <h3 className="text-lg font-semibold">{lesson.title}</h3>
-            <p className="text-muted-foreground">{phases[currentPhaseIndex].description}</p>
+          <div className="mb-4 flex items-start justify-between">
+            <div>
+              <Badge variant="outline" className="mb-2">
+                Phase {currentPhase.toUpperCase()}: {phases[currentPhaseIndex].label}
+              </Badge>
+              <h3 className="text-lg font-semibold">{lesson.title}</h3>
+              <p className="text-muted-foreground">{phases[currentPhaseIndex].description}</p>
+            </div>
+            {/* AI Personality Switcher - visible in phases B and D */}
+            {(currentPhase === 'b' || currentPhase === 'd') && (
+              <select
+                value={personalityId}
+                onChange={(e) => setPersonalityId(e.target.value as typeof personalityId)}
+                className="text-sm border rounded-md px-2 py-1 bg-background"
+              >
+                <option value="optimist">✨ Optimist</option>
+                <option value="skeptic">🤨 Skeptic</option>
+                <option value="literalist">📝 Literalist</option>
+                <option value="connector">🔗 Connector</option>
+              </select>
+            )}
           </div>
 
           {currentPhase === "a" && (
@@ -131,6 +243,7 @@ export function PracticeArc({ lesson, onComplete }: PracticeArcProps) {
               onMessagesChange={setPhaseBMessages}
               onComplete={handlePhaseBComplete}
               onMessageSend={handleMessageSend}
+              personalityId={personalityId}
             />
           )}
 
@@ -151,10 +264,17 @@ export function PracticeArc({ lesson, onComplete }: PracticeArcProps) {
               messages={phaseDMessages}
               onMessagesChange={setPhaseDMessages}
               onComplete={handlePhaseDComplete}
+              personalityId={personalityId}
             />
           )}
         </CardContent>
       </Card>
+
+      {/* Auto-save indicator */}
+      <div className="flex items-center justify-end gap-2 text-xs text-muted-foreground">
+        <Save className="w-3 h-3" />
+        Progress auto-saves
+      </div>
     </div>
   );
 }

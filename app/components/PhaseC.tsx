@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MirrorView } from "./MirrorView";
+import { ReflectionComparison } from "./ReflectionComparison";
 import { Lesson, ChatMessage } from "../lib/types";
 import { useUser } from "../lib/hooks/useUser";
 
@@ -97,7 +98,18 @@ export function PhaseC({ lesson, phaseBMessages, onComplete }: PhaseCProps) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
+      {/* Reflection Comparison - shows after user starts typing */}
+      {reflection.length > 10 && (
+        <ReflectionComparison 
+          userReflection={reflection} 
+          lessonId={lesson.id} 
+        />
+      )}
+
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-muted-foreground">
+          {reflection.length} characters (min 20)
+        </p>
         <Button
           onClick={() => onComplete(reflection)}
           disabled={reflection.length < 20}
@@ -105,12 +117,6 @@ export function PhaseC({ lesson, phaseBMessages, onComplete }: PhaseCProps) {
           Try Again with Insight →
         </Button>
       </div>
-
-      {reflection.length < 20 && (
-        <p className="text-sm text-muted-foreground text-right">
-          Share a brief reflection to continue
-        </p>
-      )}
     </div>
   );
 }

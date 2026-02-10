@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Lightbulb, AlertTriangle } from "lucide-react";
 import { AIChat } from "./AIChat";
-import { Lesson, ChatMessage } from "../lib/types";
+import { Lesson, ChatMessage, AIPersonality } from "../lib/types";
 
 interface PhaseBProps {
   lesson: Lesson;
@@ -15,6 +15,7 @@ interface PhaseBProps {
   onMessagesChange: (messages: ChatMessage[]) => void;
   onComplete: () => void;
   onMessageSend: (message: string) => void;
+  personalityId?: AIPersonality;
 }
 
 export function PhaseB({
@@ -25,6 +26,7 @@ export function PhaseB({
   onMessagesChange,
   onComplete,
   onMessageSend,
+  personalityId = "optimist",
 }: PhaseBProps) {
   useEffect(() => {
     // Add initial AI message if none exist
@@ -74,6 +76,7 @@ export function PhaseB({
               ]);
             }}
             phase="b"
+            personalityId={personalityId}
           />
         </div>
 

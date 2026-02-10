@@ -2,6 +2,8 @@
 
 export type DepthLevel = 'surface' | 'structure' | 'judgment' | 'fluency';
 
+export type AIPersonality = 'skeptic' | 'optimist' | 'literalist' | 'connector';
+
 export interface SkillToken {
   id: string;
   name: string;
@@ -130,4 +132,35 @@ export interface LessonProgress {
   startedAt: string;
   completedAt?: string;
   depthAchieved: DepthLevel;
+  phaseAData?: { problem: string; context: string };
+  phaseCReflection?: string;
+}
+
+// Good friction examples to show users
+export interface GoodFrictionExample {
+  id: string;
+  situation: string;
+  friction: string;
+  whyItHelps: string;
+  lessonId?: string;
+}
+
+// Related lessons for recommendations
+export interface RelatedLesson {
+  lessonId: string;
+  reason: string;
+  skillConnection: string;
+}
+
+// Feedback types for micro-feedback
+export type FeedbackType = 'positive' | 'improvement' | 'insight' | 'milestone';
+
+export interface MicroFeedback {
+  id: string;
+  type: FeedbackType;
+  message: string;
+  actionItem?: string;
+  lessonId: string;
+  phase: 'a' | 'b' | 'c' | 'd';
+  timestamp: string;
 }
