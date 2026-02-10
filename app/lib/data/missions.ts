@@ -208,6 +208,226 @@ export const missions = [
     skillBadge: { name: "Ethics Guardian", description: "Master of responsible prompting", icon: "Shield" },
     estimatedTime: "10-15 min",
     xpReward: 250
+  },
+  {
+    id: 11,
+    title: "Process Documentation Pro",
+    description: "Transform messy notes into professional Standard Operating Procedures.",
+    difficulty: 2,
+    difficultyLabel: "Medium",
+    category: "Business Operations",
+    objective: "Master AI-assisted documentation",
+    skill: "Process documentation",
+    problem: "Your team has tribal knowledge but no written SOPs",
+    setup: "You've recorded a process walkthrough with a senior employee. Now you need to create formal documentation.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Great documentation prevents knowledge loss.", tips: ["Identify key steps", "Note decision points", "Capture edge cases"] },
+      attempt: { title: "Draft Your Prompt", description: "Request AI to structure raw notes into SOPs.", tips: ["Share raw transcript", "Request numbered steps", "Ask for checklist format"] },
+      feedback: { title: "The Documenter's Review", description: "Is this documentation actionable?", tips: ["Check for missing steps", "Verify clarity", "Test completeness"] },
+      retry: { title: "Refine Your SOP", description: "Improve clarity and completeness.", tips: ["Add warnings for common mistakes", "Include visual aids request", "Simplify language"] }
+    },
+    aiPartner: { name: "The Documenter", personality: "organized, methodical", description: "Process documentation specialist" },
+    skillBadge: { name: "SOP Creator", description: "Master of process documentation", icon: "FileText" },
+    estimatedTime: "12-18 min",
+    xpReward: 200
+  },
+  {
+    id: 12,
+    title: "Knowledge Extractor",
+    description: "Use AI to interview experts and capture tacit knowledge.",
+    difficulty: 3,
+    difficultyLabel: "Medium",
+    category: "Knowledge Management",
+    objective: "Extract tacit knowledge systematically",
+    skill: "Knowledge extraction",
+    problem: "Critical expertise exists only in people's heads",
+    setup: "Your best salesperson is retiring. Capture their negotiation strategies before they leave.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Tacit knowledge is your hidden competitive advantage.", tips: ["Prepare focused questions", "Ask for stories", "Probe for decision criteria"] },
+      attempt: { title: "Design Interview", description: "Create AI prompts to conduct expert interviews.", tips: ["Request follow-up questions", "Ask for pattern extraction", "Probe counter-examples"] },
+      feedback: { title: "The Interviewer's Review", description: "Did you capture actionable wisdom?", tips: ["Check for specific tactics", "Verify transferability", "Test completeness"] },
+      retry: { title: "Deepen Extraction", description: "Probe deeper for nuances.", tips: ["Ask about failure stories", "Request comparison frameworks", "Capture intuition triggers"] }
+    },
+    aiPartner: { name: "The Interviewer", personality: "curious, patient", description: "Knowledge extraction specialist" },
+    skillBadge: { name: "Knowledge Miner", description: "Expert at capturing expertise", icon: "Brain" },
+    estimatedTime: "15-20 min",
+    xpReward: 250
+  },
+  {
+    id: 13,
+    title: "Meeting Intelligence",
+    description: "Summarize meetings, extract decisions, and assign follow-ups automatically.",
+    difficulty: 2,
+    difficultyLabel: "Easy-Medium",
+    category: "Productivity",
+    objective: "Master AI meeting summarization",
+    skill: "Meeting automation",
+    problem: "Meetings produce no actionable output",
+    setup: "You have a 45-minute meeting transcript that needs processing.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Good summaries create accountability.", tips: ["Identify key roles", "Note decisions", "Track action items"] },
+      attempt: { title: "Process Transcript", description: "Request structured meeting output.", tips: ["Ask for attendee list", "Request decision summary", "Extract action items with owners"] },
+      feedback: { title: "The Coordinator's Review", description: "Is this summary actionable?", tips: ["Verify action item clarity", "Check decision documentation", "Confirm owner assignments"] },
+      retry: { title: "Enhance Output", description: "Add structure for follow-through.", tips: ["Request deadline suggestions", "Add priority levels", "Format for different stakeholders"] }
+    },
+    aiPartner: { name: "The Coordinator", personality: "efficient, thorough", description: "Meeting productivity specialist" },
+    skillBadge: { name: "Meeting Summarizer", description: "Master of meeting intelligence", icon: "Users" },
+    estimatedTime: "8-12 min",
+    xpReward: 150
+  },
+  {
+    id: 14,
+    title: "Role Clarity Architect",
+    description: "Normalize messy job descriptions into clear role definitions.",
+    difficulty: 3,
+    difficultyLabel: "Medium",
+    category: "HR & Operations",
+    objective: "Create clear role definitions",
+    skill: "Role design",
+    problem: "Team confusion about responsibilities",
+    setup: "You have 5 inconsistent job descriptions for similar roles that need standardization.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Clarity prevents conflict and overlap.", tips: ["Identify core responsibilities", "Distinguish must-have vs nice-to-have", "Define decision rights"] },
+      attempt: { title: "Draft Structure", description: "Request normalized role framework.", tips: ["Provide messy examples", "Request RACI components", "Ask for leveling criteria"] },
+      feedback: { title: "The Architect's Review", description: "Are these roles actionable?", tips: ["Check for overlap gaps", "Verify decision clarity", "Test against scenarios"] },
+      retry: { title: "Refine Framework", description: "Add specificity and boundaries.", tips: ["Define escalation paths", "Add success metrics", "Clarify cross-functional touchpoints"] }
+    },
+    aiPartner: { name: "The Architect", personality: "structured, clear", description: "Organizational design specialist" },
+    skillBadge: { name: "Role Designer", description: "Expert at role clarity", icon: "UserCog" },
+    estimatedTime: "15-20 min",
+    xpReward: 250
+  },
+  {
+    id: 15,
+    title: "Resume Intelligence",
+    description: "Screen candidates efficiently without bias using AI summarization.",
+    difficulty: 4,
+    difficultyLabel: "Hard",
+    category: "Recruiting",
+    objective: "Master candidate evaluation",
+    skill: "Talent assessment",
+    problem: "Manual resume review is slow and inconsistent",
+    setup: "You have 50 resumes for a role and need to identify top 10 for interviews.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Good screening values potential and fit.", tips: ["Define success criteria", "Identify red flags", "Look for trajectory"] },
+      attempt: { title: "Design Prompt", description: "Request structured candidate analysis.", tips: ["Share job requirements", "Request fit scoring", "Ask for evidence mapping"] },
+      feedback: { title: "The Recruiter's Review", description: "Is this analysis fair and useful?", tips: ["Check for bias indicators", "Verify evidence-based scoring", "Test ranking logic"] },
+      retry: { title: "Refine Assessment", description: "Improve fairness and accuracy.", tips: ["Add structured rubric", "Request gap analysis", "Include interview questions suggested"] }
+    },
+    aiPartner: { name: "The Recruiter", personality: "objective, insightful", description: "Talent assessment specialist" },
+    skillBadge: { name: "Talent Scout", description: "Expert at candidate evaluation", icon: "UserCheck" },
+    estimatedTime: "15-25 min",
+    xpReward: 300
+  },
+  {
+    id: 16,
+    title: "FAQ Factory",
+    description: "Generate comprehensive FAQs and playbooks from existing documentation.",
+    difficulty: 2,
+    difficultyLabel: "Medium",
+    category: "Customer Support",
+    objective: "Create self-service resources",
+    skill: "Knowledge base creation",
+    problem: "Support team answers same questions repeatedly",
+    setup: "You have product docs and support tickets. Build a FAQ that deflects common inquiries.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Good FAQs reduce support load.", tips: ["Identify frequent questions", "Organize by topic", "Write for searchability"] },
+      attempt: { title: "Generate Content", description: "Request AI to extract and organize FAQs.", tips: ["Share source docs", "Request question-answer pairs", "Ask for decision trees"] },
+      feedback: { title: "The Librarian's Review", description: "Are these FAQs helpful?", tips: ["Test question coverage", "Verify answer accuracy", "Check findability"] },
+      retry: { title: "Improve Coverage", description: "Fill gaps and improve clarity.", tips: ["Add edge cases", "Include troubleshooting", "Create quick-reference format"] }
+    },
+    aiPartner: { name: "The Librarian", personality: "helpful, organized", description: "Knowledge base specialist" },
+    skillBadge: { name: "FAQ Architect", description: "Master of self-service content", icon: "BookOpen" },
+    estimatedTime: "12-18 min",
+    xpReward: 200
+  },
+  {
+    id: 17,
+    title: "Sales Framework Enforcer",
+    description: "Generate personalized outreach while maintaining consistent messaging.",
+    difficulty: 3,
+    difficultyLabel: "Medium",
+    category: "Sales",
+    objective: "Scale personalized sales outreach",
+    skill: "Sales automation",
+    problem: "Sales reps send inconsistent, ineffective emails",
+    setup: "Create a framework that personalizes 20 prospect emails while following your methodology.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Personalization at scale requires frameworks.", tips: ["Define core value props", "Identify personalization signals", "Maintain brand voice"] },
+      attempt: { title: "Build Template", description: "Request AI to create flexible framework.", tips: ["Share successful examples", "Request variable insertion", "Ask for tone calibration"] },
+      feedback: { title: "The Closer's Review", description: "Are these emails compelling?", tips: ["Test personalization quality", "Verify framework adherence", "Check call-to-action clarity"] },
+      retry: { title: "Optimize Framework", description: "Improve effectiveness metrics.", tips: ["A/B test variations", "Add objection handling", "Refine subject lines"] }
+    },
+    aiPartner: { name: "The Closer", personality: "persuasive, strategic", description: "Sales methodology expert" },
+    skillBadge: { name: "Outreach Optimizer", description: "Expert at sales automation", icon: "Mail" },
+    estimatedTime: "15-20 min",
+    xpReward: 250
+  },
+  {
+    id: 18,
+    title: "Feedback Translator",
+    description: "Analyze customer reviews to extract themes, trends, and action items.",
+    difficulty: 3,
+    difficultyLabel: "Medium",
+    category: "Customer Insights",
+    objective: "Master customer feedback analysis",
+    skill: "Voice of customer",
+    problem: "Customer feedback is scattered and unstructured",
+    setup: "You have 200 app store reviews that need synthesis into product priorities.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Feedback reveals what customers really think.", tips: ["Identify sentiment signals", "Categorize by theme", "Prioritize by frequency"] },
+      attempt: { title: "Analyze Reviews", description: "Request thematic analysis of feedback.", tips: ["Share review batch", "Request sentiment breakdown", "Ask for trend identification"] },
+      feedback: { title: "The Analyst's Review", description: "Are these insights actionable?", tips: ["Verify theme accuracy", "Check priority sorting", "Test recommendation relevance"] },
+      retry: { title: "Deepen Analysis", description: "Add strategic recommendations.", tips: ["Request competitive benchmarks", "Add severity scoring", "Include fix effort estimates"] }
+    },
+    aiPartner: { name: "The Analyst", personality: "insightful, data-driven", description: "Customer research specialist" },
+    skillBadge: { name: "Voice Translator", description: "Expert at customer insights", icon: "MessageCircle" },
+    estimatedTime: "15-20 min",
+    xpReward: 250
+  },
+  {
+    id: 19,
+    title: "Scenario Simulator",
+    description: "Model best-case, worst-case, and most-likely outcomes for decisions.",
+    difficulty: 4,
+    difficultyLabel: "Hard",
+    category: "Strategic Planning",
+    objective: "Master scenario planning with AI",
+    skill: "Scenario modeling",
+    problem: "Leadership makes decisions without considering outcomes",
+    setup: "Your company is considering a pricing change. Model the likely impacts.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Good scenarios reveal hidden risks and opportunities.", tips: ["Define key variables", "Identify assumptions", "Consider second-order effects"] },
+      attempt: { title: "Build Scenarios", description: "Request AI to model multiple futures.", tips: ["Share decision context", "Request 3 scenarios", "Ask for probability estimates"] },
+      feedback: { title: "The Futurist's Review", description: "Are these scenarios comprehensive?", tips: ["Check assumption validity", "Test variable sensitivity", "Verify logic chains"] },
+      retry: { title: "Expand Analysis", description: "Add depth and contingency planning.", tips: ["Add trigger points", "Request mitigation strategies", "Include competitor responses"] }
+    },
+    aiPartner: { name: "The Futurist", personality: "strategic, analytical", description: "Scenario planning specialist" },
+    skillBadge: { name: "Scenario Planner", description: "Master of strategic modeling", icon: "GitBranch" },
+    estimatedTime: "20-30 min",
+    xpReward: 350
+  },
+  {
+    id: 20,
+    title: "Decision Support System",
+    description: "Structure complex decisions with AI-assisted criteria weighting and analysis.",
+    difficulty: 5,
+    difficultyLabel: "Expert",
+    category: "Executive Support",
+    objective: "Master AI-assisted decision making",
+    skill: "Decision frameworks",
+    problem: "High-stakes decisions lack structured evaluation",
+    setup: "You're choosing between 3 vendor proposals for a $500K system. Make the right choice.",
+    phases: {
+      setup: { title: "Mission Briefing", description: "Structured decisions reduce regret.", tips: ["Define decision criteria", "Weight importance", "Gather options"] },
+      attempt: { title: "Structure Decision", description: "Request AI to create decision matrix.", tips: ["Share proposal details", "Request criteria-based scoring", "Ask for trade-off analysis"] },
+      feedback: { title: "The Advisor's Review", description: "Is this analysis decision-ready?", tips: ["Check criteria coverage", "Verify scoring objectivity", "Test sensitivity to changes"] },
+      retry: { title: "Enhance Framework", description: "Add risk and uncertainty handling.", tips: ["Add confidence intervals", "Request implementation roadmap", "Include exit strategy analysis"] }
+    },
+    aiPartner: { name: "The Advisor", personality: "wise, impartial", description: "Strategic decision specialist" },
+    skillBadge: { name: "Decision Architect", description: "Master of strategic decisions", icon: "Scale" },
+    estimatedTime: "25-35 min",
+    xpReward: 400
   }
 ];
 
