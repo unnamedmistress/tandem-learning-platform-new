@@ -210,3 +210,6 @@ export const missions = [
     xpReward: 250
   }
 ];
+
+export const getMissionById = (id) => missions.find(m => m.id === id);
+export const getAllMissions = () => missions;
