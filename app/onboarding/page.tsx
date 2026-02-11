@@ -4,27 +4,28 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { GoalSetter } from '../components/GoalSetter';
-import { OnboardingPersonalitySelector } from '../components/OnboardingPersonalitySelector';
-import { LearningLoopDemo } from '../components/LearningLoopDemo';
-import { Trophy, Sparkles, Target, ArrowRight, Flame } from 'lucide-react';
+import { Trophy, Sparkles, Target, ArrowRight, Flame, Zap, Check } from 'lucide-react';
 
-type OnboardingStep = 'welcome' | 'how-it-works' | 'goals' | 'personality' | 'ready';
+type OnboardingStep = 'welcome' | 'goals' | 'ready';
+
+// Default optimist personality - pre-selected for simplicity
+const defaultPersonality = {
+  id: "optimist",
+  name: "The Optimist",
+  tagline: "Encouraging. Supportive. Growth-minded.",
+  description: "Your always-positive AI partner focused on helping you learn and grow.",
+  color: "#00F0FF"
+};
 
 export default function OnboardingPage() {
   const [step, setStep] = useState<OnboardingStep>('welcome');
   const [userGoals, setUserGoals] = useState<string[]>([]);
-  const [selectedPersonality, setSelectedPersonality] = useState<{id: string, name: string} | null>(null);
   
-  const steps: OnboardingStep[] = ['welcome', 'how-it-works', 'goals', 'personality', 'ready'];
+  const steps: OnboardingStep[] = ['welcome', 'goals', 'ready'];
   const currentStepIndex = steps.indexOf(step);
 
   const handleGoalsSubmit = (goalIds: string[]) => {
     setUserGoals(goalIds);
-    setStep('personality');
-  };
-
-  const handlePersonalitySelect = (id: string, name: string) => {
-    setSelectedPersonality({ id, name });
     setStep('ready');
   };
   
@@ -43,7 +44,7 @@ export default function OnboardingPage() {
       {/* Skip button */}
       <div className="fixed top-28 right-8 z-40">
         <Link 
-          href="/classes"
+          href="/missions"
           className="text-xs uppercase tracking-wider px-4 py-2 rounded-xl glass text-gray-400 hover:text-white hover:border-white/30 transition-all"
         >
           Skip →
@@ -85,15 +86,15 @@ export default function OnboardingPage() {
               >
                 <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
                   <Target className="w-5 h-5 text-cyan-400" />
-                  <span className="text-gray-300">6 Practice Classes</span>
+                  <span className="text-gray-300">Training Missions</span>
+                </div>
+                <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
+                  <Zap className="w-5 h-5 text-purple-400" />
+                  <span className="text-gray-300">Skill Challenges</span>
                 </div>
                 <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
                   <Sparkles className="w-5 h-5 text-pink-400" />
-                  <span className="text-gray-300">4 AI Partners</span>
-                </div>
-                <div className="flex items-center gap-3 px-4 py-3 glass rounded-xl">
-                  <Trophy className="w-5 h-5 text-purple-400" />
-                  <span className="text-gray-300">∞ Skill Tokens</span>
+                  <span className="text-gray-300">∞ Possibilities</span>
                 </div>
               </motion.div>
 
@@ -101,33 +102,17 @@ export default function OnboardingPage() {
                 initial={{ y: 60, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                onClick={() => setStep('how-it-works')}
+                onClick={() => setStep('goals')}
                 className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg bg-gradient-to-r from-cyan-400 to-pink-500 text-white hover:opacity-90 transition-all hover:scale-105"
               >
-                See How It Works
+                Let's Go
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.button>
             </div>
           </motion.div>
         )}
 
-        {/* Step 2: How It Works */}
-        {step === 'how-it-works' && (
-          <motion.div
-            key="how-it-works"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex items-center justify-center py-8 px-4 pt-24"
-          >
-            <LearningLoopDemo 
-              onComplete={() => setStep('goals')}
-              autoPlay={false}
-            />
-          </motion.div>
-        )}
-
-        {/* Step 3: Set Goals */}
+        {/* Step 2: Set Goals */}
         {step === 'goals' && (
           <motion.div
             key="goals"
@@ -138,28 +123,12 @@ export default function OnboardingPage() {
           >
             <GoalSetter 
               onComplete={handleGoalsSubmit}
-              onBack={() => setStep('how-it-works')}
+              onBack={() => setStep('welcome')}
             />
           </motion.div>
         )}
 
-        {/* Step 4: Choose Personality */}
-        {step === 'personality' && (
-          <motion.div
-            key="personality"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 pt-24"
-          >
-            <OnboardingPersonalitySelector 
-              onSelect={handlePersonalitySelect}
-              onBack={() => setStep('goals')}
-            />
-          </motion.div>
-        )}
-
-        {/* Step 5: Ready */}
+        {/* Step 3: Ready */}
         {step === 'ready' && (
           <motion.div
             key="ready"
@@ -209,7 +178,7 @@ export default function OnboardingPage() {
                 <div className="space-y-3">
                   {userGoals.length > 0 && (
                     <div className="flex items-start gap-3">
-                      <Sparkles className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+                      <Target className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="text-gray-400">Goals:</span>
                         <div className="flex flex-wrap gap-2 mt-1">
@@ -228,15 +197,14 @@ export default function OnboardingPage() {
                     </div>
                   )}
                   
-                  {selectedPersonality && (
-                    <div className="flex items-center gap-3">
-                      <Trophy className="w-5 h-5 text-pink-400 flex-shrink-0" />
-                      <div>
-                        <span className="text-gray-400">AI Partner: </span>
-                        <span className="text-white font-medium">{selectedPersonality.name}</span>
-                      </div>
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="w-5 h-5 text-pink-400 flex-shrink-0" />
+                    <div>
+                      <span className="text-gray-400">AI Partner: </span>
+                      <span className="text-white font-medium">{defaultPersonality.name}</span>
+                      <p className="text-xs text-gray-500">{defaultPersonality.tagline}</p>
                     </div>
-                  )}
+                  </div>
                 </div>
               </motion.div>
               
@@ -246,14 +214,14 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.7 }}
               >
                 <Link 
-                  href="/classes"
+                  href="/missions"
                   className="group inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-bold text-lg bg-gradient-to-r from-cyan-400 to-pink-500 text-white hover:opacity-90 transition-all hover:scale-105"
                 >
-                  Enter the Dojo
+                  Start Training
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <p className="text-gray-500 text-sm mt-4">
-                  You can change your goals and AI partner anytime
+                  You can change your goals anytime in your profile
                 </p>
               </motion.div>
             </div>

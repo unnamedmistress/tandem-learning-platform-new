@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Sparkles, Users, Trophy, Zap, Brain, ArrowRight, Play, ChevronDown } from 'lucide-react';
+import { Sparkles, Users, Trophy, Zap, Brain, ArrowRight, Play, ChevronDown, Target } from 'lucide-react';
 
 const features = [
   { 
@@ -16,7 +16,7 @@ const features = [
   { 
     number: "02", 
     title: "Collaborate", 
-    desc: "Work alongside AI partners with different personalities",
+    desc: "Work alongside your AI partner to solve real problems",
     icon: Users, 
     color: "#FF006E" 
   },
@@ -30,8 +30,8 @@ const features = [
 ];
 
 const stats = [
-  { icon: Brain, label: "Practice Classes", value: "6", color: "#00F0FF" },
-  { icon: Sparkles, label: "AI Partners", value: "4", color: "#FF006E" },
+  { icon: Brain, label: "Training Missions", value: "10", color: "#00F0FF" },
+  { icon: Target, label: "Challenges", value: "∞", color: "#FF006E" },
   { icon: Zap, label: "Possibilities", value: "∞", color: "#8B5CF6" },
 ];
 
@@ -92,10 +92,10 @@ export default function Home() {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
-              href="/classes"
+              href="/missions"
               className="inline-flex items-center gap-2 px-8 py-4 glass font-medium text-lg rounded-2xl hover:bg-white/10 transition-all"
             >
-              Browse Classes
+              Browse Missions
             </Link>
           </motion.div>
         </motion.div>
