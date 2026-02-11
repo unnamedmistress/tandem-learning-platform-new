@@ -1,9 +1,12 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Clock, Award, Target, MessageSquare, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Clock, Award, Target, MessageSquare, ChevronRight, Send, CheckCircle, Sparkles } from 'lucide-react';
 import { getMissionById } from '../../lib/data/missions';
+import { useUser } from '../../lib/hooks/useUser';
 
 const difficultyColors: Record<string, string> = {
   'Easy': 'bg-green-500/20 text-green-400 border-green-500/30',
@@ -14,10 +17,30 @@ const difficultyColors: Record<string, string> = {
   'Expert': 'bg-pink-500/20 text-pink-400 border-pink-500/30'
 };
 
+type MissionPhase = 'setup' | 'attempt' | 'feedback' | 'retry' | 'completed';
+
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
 export default function MissionPage() {
   const params = useParams();
   const missionId = params?.id ? Number(params.id) : null;
   const mission = missionId ? getMissionById(missionId) : null;
+  const { user, addSkillToken, completeLesson } = useUser();
+  
+  // Mission state
+  const [currentPhase, setCurrentPhase] = useState<MissionPhase>('setup');
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const [attemptText, setAttemptText] = useState('');
+  const [retryText, setRetryText] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   if (!mission) {
     return (
