@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, Users, User, Brain, Sparkles, Menu, X } from "lucide-react";
+import { GraduationCap, Users, User, Brain, Sparkles, Menu, X, Target } from "lucide-react";
 import { Tooltip } from "../components/Tooltip";
 
 export function Navigation() {
@@ -13,16 +13,22 @@ export function Navigation() {
   
   const navItems = [
     { 
+      href: "/challenge-classes", 
+      label: "Classes", 
+      icon: GraduationCap,
+      tooltip: "Structured challenge-based courses"
+    },
+    { 
       href: "/missions", 
       label: "Missions", 
-      icon: GraduationCap,
-      tooltip: "Structured AI practice missions"
+      icon: Target,
+      tooltip: "Skill-building missions"
     },
     { 
       href: "/challenges", 
-      label: "Challenges", 
+      label: "Practice", 
       icon: Users,
-      tooltip: "Community challenges and exercises"
+      tooltip: "Free-form challenge practice"
     },
     { 
       href: "/profile", 
