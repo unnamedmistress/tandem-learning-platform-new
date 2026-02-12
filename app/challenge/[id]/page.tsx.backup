@@ -12,12 +12,9 @@ import {
   Lightbulb,
   CheckCircle2,
   Sparkles,
-  ChevronRight,
-  Trophy,
-  Star
+  ChevronRight
 } from "lucide-react";
 import { challenges } from "../../lib/data/challenges";
-import { useUser } from "../../lib/hooks/useUser";
 
 // AI Partner personalities for challenges
 const aiPartners = [
@@ -55,15 +52,11 @@ export default function ChallengePracticePage() {
   const params = useParams();
   const challengeId = params?.id as string;
   const challenge = challenges.find(c => c.id === challengeId);
-  const { user, addSkillToken, completeLesson } = useUser();
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [selectedPartner, setSelectedPartner] = useState(aiPartners[0]);
   const [hasStarted, setHasStarted] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [showCompletion, setShowCompletion] = useState(false);
-  const [userMessageCount, setUserMessageCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
@@ -84,9 +77,7 @@ export default function ChallengePracticePage() {
 
 ${challenge.description}
 
-How would you like to approach this? 
-
-*Tip: Have at least 3 meaningful exchanges with the AI to complete this challenge and earn a badge!*`,
+How would you like to approach this?`,
           timestamp: new Date()
         }
       ]);
@@ -95,7 +86,7 @@ How would you like to approach this?
   }, [challenge, selectedPartner, hasStarted]);
 
   const handleSend = () => {
-    if (!input.trim() || isCompleted) return;
+    if (!input.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -106,7 +97,6 @@ How would you like to approach this?
 
     setMessages(prev => [...prev, userMessage]);
     setInput("");
-    setUserMessageCount(prev => prev + 1);
 
     // Simulate AI response (in real app, this would call an API)
     setTimeout(() => {
@@ -117,51 +107,7 @@ How would you like to approach this?
         timestamp: new Date()
       };
       setMessages(prev => [...prev, aiResponse]);
-
-      // Check for completion after AI response
-      if (userMessageCount + 1 >= 3) {
-        completeChallenge();
-      }
     }, 1000);
-  };
-
-  const completeChallenge = () => {
-    if (isCompleted) return;
-    
-    setIsCompleted(true);
-    
-    // Award badge for completing challenge
-    const badgeName = `${selectedPartner.name} Collaborator`;
-    const badgeDescription = `Successfully practiced with ${selectedPartner.name} on a real-world challenge`;
-    
-    addSkillToken({
-      id: `challenge-${challengeId}-${Date.now()}`,
-      name: badgeName,
-      description: badgeDescription,
-      earnedAt: new Date().toISOString(),
-      context: `Completed: ${challenge?.title || 'Community Challenge'}`,
-      lessonId: challengeId
-    });
-    
-    // Mark challenge as completed
-    completeLesson(challengeId, 'fluency');
-    
-    // Show completion message after a brief delay
-    setTimeout(() => {
-      setShowCompletion(true);
-      const completionMessage: Message = {
-        id: `completion-${Date.now()}`,
-        role: "assistant",
-        content: `**Challenge Complete! 🎉**\n\nYou've successfully practiced with ${selectedPartner.name} and earned the **${badgeName}** badge!\n\nThis shows your ability to collaborate with different AI personalities on real-world problems. Keep practicing to collect more badges!`,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, completionMessage]);
-    }, 500);
-  };
-
-  const handleMarkComplete = () => {
-    if (isCompleted) return;
-    completeChallenge();
   };
 
   const generateAIResponse = (userInput: string, partnerId: string) => {
@@ -207,39 +153,27 @@ How would you like to approach this?
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Challenge Header - Not fixed, just a regular header */}
-      <div className="pt-24 pb-8 px-4">
-        <div className="max-w-6xl mx-auto">
-          <Link 
-            href="/challenges"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Challenges
-          </Link>
-          
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-4 mb-2">
-                <span className="text-sm text-gray-500">Practicing:</span>
-                <span className="text-sm font-medium text-pink-500">{challenge.title}</span>
-              </div>
-              <h1 className="text-2xl font-bold">{challenge.title}</h1>
-            </div>
+            <Link 
+              href="/challenges"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Challenges
+            </Link>
             
-            {!isCompleted && (
-              <div className="text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 text-pink-500 rounded-xl text-sm">
-                  <Star className="w-4 h-4" />
-                  <span>Progress: {userMessageCount} of 3</span>
-                </div>
-              </div>
-            )}
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500">Practicing:</span>
+              <span className="text-sm font-medium text-pink-500">{challenge.title}</span>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="pb-32 px-4">
+      <div className="pt-20 pb-32 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Sidebar - Challenge Info & AI Partner */}
@@ -277,15 +211,13 @@ How would you like to approach this?
                       key={partner.id}
                       onClick={() => {
                         setSelectedPartner(partner);
-                        // Reset user message count when switching partners
-                        setUserMessageCount(0);
                         // Add system message about partner change
                         setMessages(prev => [
                           ...prev,
                           {
                             id: Date.now().toString(),
                             role: "assistant",
-                            content: `*Switches to ${partner.name} personality.*\n\n${partner.greeting}\n\n*Note: Starting fresh with new AI partner.*`,
+                            content: `*Switches to ${partner.name} personality.*\n\n${partner.greeting}`,
                             timestamp: new Date()
                           }
                         ]);
@@ -386,72 +318,29 @@ How would you like to approach this?
 
                 {/* Input Area */}
                 <div className="p-4 border-t border-white/10 bg-black/20">
-                  {!isCompleted ? (
-                    <div className="space-y-4">
-                      <div className="flex gap-3">
-                        <textarea
-                          value={input}
-                          onChange={(e) => setInput(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                              e.preventDefault();
-                              handleSend();
-                            }
-                          }}
-                          placeholder="Type your message..."
-                          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400/50 resize-none"
-                          rows={2}
-                        />
-                        <button
-                          onClick={handleSend}
-                          disabled={!input.trim()}
-                          className="px-6 py-3 bg-cyan-400/20 text-cyan-400 rounded-xl font-medium hover:bg-cyan-400/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                        >
-                          <Send className="w-4 h-4" />
-                          Send
-                        </button>
-                      </div>
-                      <div className="text-center">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 text-pink-500 rounded-xl text-sm">
-                          <Star className="w-4 h-4" />
-                          <span>Progress: {userMessageCount} of 3 exchanges</span>
-                        </div>
-                        {userMessageCount >= 1 && (
-                          <p className="text-xs text-gray-500 mt-2">
-                            Keep going! You're making progress on this challenge.
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-cyan-400 to-pink-500 mb-4"
-                      >
-                        <Trophy className="w-10 h-10 text-white" />
-                      </motion.div>
-                      <h3 className="text-2xl font-bold mb-2">Challenge Complete!</h3>
-                      <p className="text-gray-400 mb-6">
-                        You earned: <span className="text-pink-500 font-medium">{selectedPartner.name} Collaborator</span> badge
-                      </p>
-                      <div className="flex gap-3 justify-center">
-                        <Link 
-                          href="/challenges"
-                          className="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-colors"
-                        >
-                          Back to Challenges
-                        </Link>
-                        <Link 
-                          href="/profile"
-                          className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-pink-500 text-white rounded-xl hover:opacity-90 transition-opacity"
-                        >
-                          View Profile
-                        </Link>
-                      </div>
-                    </div>
-                  )}
+                  <div className="flex gap-3">
+                    <textarea
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSend();
+                        }
+                      }}
+                      placeholder="Type your message..."
+                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400/50 resize-none"
+                      rows={2}
+                    />
+                    <button
+                      onClick={handleSend}
+                      disabled={!input.trim()}
+                      className="px-6 py-3 bg-cyan-400/20 text-cyan-400 rounded-xl font-medium hover:bg-cyan-400/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                      <Send className="w-4 h-4" />
+                      Send
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
