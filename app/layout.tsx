@@ -33,10 +33,10 @@ export default function RootLayout({
       <body className="bg-black text-white min-h-screen">
         <UserProvider>
           {/* Navigation */}
-          <header className="fixed top-0 left-0 right-0 z-50">
-            <div className="mx-4 mt-4">
-              <nav className="max-w-7xl mx-auto px-6 py-4 glass rounded-2xl">
-                <div className="flex items-center justify-between">
+          <header className="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden">
+            <div className="w-full px-4 mt-4">
+              <nav className="max-w-full lg:max-w-7xl mx-auto px-4 sm:px-6 py-4 glass rounded-2xl w-full">
+                <div className="flex items-center justify-between w-full">
                   {/* Logo */}
                   <Link href="/" className="flex items-center gap-2 group">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform">
